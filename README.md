@@ -341,18 +341,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 👨‍💻 Author
-
-**Salvero**
-
-- GitHub: [@Salvero](https://github.com/Salvero)
-
----
 
 <div align="center">
 
 ⭐ Star this repo if you find it helpful!
 
-Built with **Django 5.2** • **HTMX** • **Alpine.js** • **Tailwind CSS**
+Built with **Django 5.2** • **HTML** • **Alpine.js** • **Tailwind CSS**
 
 </div>
