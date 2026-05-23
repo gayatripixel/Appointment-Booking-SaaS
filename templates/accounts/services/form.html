@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - {{ shop.name }} - AppointHub{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto">
+    <div class="mb-6">
+        <a href="{% url 'services:list' shop.slug %}" class="text-indigo-600 hover:text-indigo-800">&larr; Back to Services</a>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg p-8">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">{{ title }}</h1>
+
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+
+            <div>
+                <label for="id_name" class="block text-sm font-medium text-gray-700 mb-1">Service Name *</label>
+                <input type="text" name="name" id="id_name" value="{{ form.name.value|default:'' }}"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                       placeholder="e.g., Haircut, Massage, Consultation" required>
+                {% if form.name.errors %}<p class="mt-1 text-sm text-red-600">{{ form.name.errors.0 }}</p>{% endif %}
+            </div>
+
+            <div>
+                <label for="id_category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                <select name="category" id="id_category"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">-- No Category --</option>
+                    {% for cat in form.fields.category.queryset %}
+                    <option value="{{ cat.pk }}" {% if form.category.value == cat.pk|stringformat:"s" %}selected{% endif %}>
+                        {{ cat.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label for="id_description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <textarea name="description" id="id_description" rows="3"
+                          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                          placeholder="Describe this service...">{{ form.description.value|default:'' }}</textarea>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="id_duration" class="block text-sm font-medium text-gray-700 mb-1">Duration (minutes) *</label>
+                    <input type="number" name="duration" id="id_duration" value="{{ form.duration.value|default:30 }}"
+                           min="5" step="5"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" required>
+                    {% if form.duration.errors %}<p class="mt-1 text-sm text-red-600">{{ form.duration.errors.0 }}</p>{% endif %}
+                </div>
+
+                <div>
+                    <label for="id_price" class="block text-sm font-medium text-gray-700 mb-1">Price ($) *</label>
+                    <input type="number" name="price" id="id_price" value="{{ form.price.value|default:'' }}"
+                           min="0" step="0.01"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" required>
+                    {% if form.price.errors %}<p class="mt-1 text-sm text-red-600">{{ form.price.errors.0 }}</p>{% endif %}
+                </div>
+            </div>
+
+            <!-- Advanced Options -->
+            <details class="border rounded-md p-4">
+                <summary class="cursor-pointer text-sm font-medium text-gray-700">Advanced Options</summary>
+
+                <div class="mt-4 space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="id_buffer_before" class="block text-sm font-medium text-gray-700 mb-1">Buffer Before (min)</label>
+                            <input type="number" name="buffer_before" id="id_buffer_before"
+                                   value="{{ form.buffer_before.value|default:0 }}" min="0" step="5"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
+                            <p class="text-xs text-gray-500 mt-1">Prep time before service</p>
+                        </div>
+
+                        <div>
+                            <label for="id_buffer_after" class="block text-sm font-medium text-gray-700 mb-1">Buffer After (min)</label>
+                            <input type="number" name="buffer_after" id="id_buffer_after"
+                                   value="{{ form.buffer_after.value|default:0 }}" min="0" step="5"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
+                            <p class="text-xs text-gray-500 mt-1">Cleanup time after service</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="id_order" class="block text-sm font-medium text-gray-700 mb-1">Display Order</label>
+                        <input type="number" name="order" id="id_order"
+                               value="{{ form.order.value|default:0 }}" min="0"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
+                        <p class="text-xs text-gray-500 mt-1">Lower numbers appear first</p>
+                    </div>
+
+                    <div>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="is_active"
+                                   {% if form.is_active.value or not service %}checked{% endif %}
+                                   class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            <span class="ml-2 text-sm text-gray-600">Active (available for booking)</span>
+                        </label>
+                    </div>
+                </div>
+            </details>
+
+            <div class="pt-4 flex space-x-4">
+                <button type="submit"
+                        class="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    {% if service %}Save Changes{% else %}Create Service{% endif %}
+                </button>
+                <a href="{% url 'services:list' shop.slug %}"
+                   class="flex-1 text-center bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

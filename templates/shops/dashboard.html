@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ shop.name }} Dashboard - AppointHub{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-5">
+<div class="bg-white rounded-2xl border border-gray-100 p-5 mb-6">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+
+        <!-- Left -->
+        <div>
+            <div class="flex items-center gap-3 mb-3">
+
+                <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-2xl font-bold shadow-lg">
+                    {{ shop.name|first }}
+                </div>
+
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">
+                        {{ shop.name }}
+                    </h1>
+
+                    <p class="text-gray-500 text-sm">
+                        Shop Dashboard
+                    </p>
+                </div>
+            </div>
+
+            <!-- Shop Tabs -->
+            <div class="flex flex-wrap gap-3 mt-5">
+                {% for s in all_shops %}
+                    <a href="{% url 'shops:dashboard' s.slug %}"
+                       class="px-4 py-1.5 text-sm rounded-xl border transition-all duration-200
+                       {% if s.slug == shop.slug %}
+                            bg-indigo-600 text-white border-indigo-600 shadow-md
+                       {% else %}
+                            bg-white text-gray-700 border-gray-200 hover:bg-gray-100
+                       {% endif %}">
+                        {{ s.name }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Right -->
+        <div class="flex gap-3">
+            <a href="{% url 'shops:public' shop.slug %}"
+               target="_blank"
+               class="px-4 py-2 rounded-2xl bg-gray-100 hover:bg-gray-200 transition text-gray-700 font-medium">
+                View Public Page
+            </a>
+
+            <a href="{% url 'shops:edit' shop.slug %}"
+               class="px-4 py-2 rounded-2xl bg-indigo-600 hover:bg-indigo-700 transition text-white font-medium shadow-lg shadow-indigo-200">
+                Edit Shop
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+        <div class="text-gray-500 text-sm font-medium">Today's Appointments</div>
+        <div class="text-3xl font-bold text-gray-800 mt-2">{{ today_bookings }}</div>
+    </div>
+
+    <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+        <div class="text-gray-500 text-sm font-medium">Pending Bookings</div>
+        <div class="text-3xl font-bold text-gray-800 mt-2">{{ pending_bookings }}</div>
+    </div>
+
+    <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+        <div class="text-gray-500 text-sm font-medium">Active Services</div>
+        <div class="text-3xl font-bold text-gray-800 mt-2">{{ services_count }}</div>
+    </div>
+
+    <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+        <div class="text-gray-500 text-sm font-medium">Staff Members</div>
+        <div class="text-3xl font-bold text-gray-800 mt-2">{{ staff_count }}</div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Management Links -->
+    <div class="bg-white rounded-lg shadow">
+        <div class="p-6 border-b">
+            <h2 class="text-xl font-bold text-gray-800">Shop Management</h2>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-2 gap-4">
+                <a href="{% url 'services:list' shop.slug %}"
+                 class="flex items-center p-4 bg-gray-50 rounded-xl hover:bg-indigo-50 transition" >
+                    <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
+                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="font-medium text-gray-800">Services</div>
+                        <div class="text-sm text-gray-500">Manage your services</div>
+                    </div>
+                </a>
+
+                <a href="{% url 'staff:list' shop.slug %}"
+                   class="flex items-center p-4 bg-[#f7f7fb] rounded-lg hover:bg-gray-100">
+                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="font-medium text-gray-800">Staff</div>
+                        <div class="text-sm text-gray-500">Manage staff members</div>
+                    </div>
+                </a>
+
+                <a href="{% url 'shops:hours' shop.slug %}"
+                   class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100">
+                    <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center mr-3">
+                        <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="font-medium text-gray-800">Business Hours</div>
+                        <div class="text-sm text-gray-500">Set opening hours</div>
+                    </div>
+                </a>
+
+                <a href="{% url 'shops:closures' shop.slug %}"
+                   class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100">
+                    <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3">
+                        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="font-medium text-gray-800">Closures</div>
+                        <div class="text-sm text-gray-500">Holidays & days off</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+        <div class="p-6 border-b">
+            <h2 class="text-xl font-bold text-gray-800">Recent Activity</h2>
+        </div>
+        <div class="p-6">
+            <p class="text-gray-500 text-center py-8">No recent activity</p>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

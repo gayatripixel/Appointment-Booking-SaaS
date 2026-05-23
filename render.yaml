@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: appointhub
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "python manage.py migrate && gunicorn config.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.6"
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: "4"

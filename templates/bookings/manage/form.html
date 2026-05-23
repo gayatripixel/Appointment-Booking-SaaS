@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - {{ shop.name }} - AppointHub{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl">
+    <div class="mb-6">
+        <a href="{% url 'bookings:manage_list' shop.slug %}" class="text-indigo-600 hover:text-indigo-800">&larr; Back to Bookings</a>
+    </div>
+
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">{{ title }}</h1>
+
+    <form method="post" class="bg-white shadow-sm rounded-lg p-6">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
+            {% for error in form.non_field_errors %}
+            <p class="text-red-600 text-sm">{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="{{ form.service.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                        Service *
+                    </label>
+                    <select name="service" id="{{ form.service.id_for_label }}"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="">Select service...</option>
+                        {% for service in form.fields.service.queryset %}
+                        <option value="{{ service.pk }}" {% if form.service.value == service.pk|stringformat:"s" %}selected{% endif %}>
+                            {{ service.name }} - ₹{{ service.price }} ({{ service.duration }} min)
+                        </option>
+                        {% endfor %}
+                    </select>
+                    {% if form.service.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.service.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="{{ form.staff.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                        Staff *
+                    </label>
+                    <select name="staff" id="{{ form.staff.id_for_label }}"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="">Select staff...</option>
+                        {% for staff in form.fields.staff.queryset %}
+                        <option value="{{ staff.pk }}" {% if form.staff.value == staff.pk|stringformat:"s" %}selected{% endif %}>
+                            {{ staff.display_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    {% if form.staff.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.staff.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="{{ form.date.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                        Date *
+                    </label>
+                    <input type="date" name="date" id="{{ form.date.id_for_label }}"
+                           value="{{ form.date.value|default:'' }}"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    {% if form.date.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.date.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="{{ form.start_time.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                        Start Time *
+                    </label>
+                    <input type="time" name="start_time" id="{{ form.start_time.id_for_label }}"
+                           value="{{ form.start_time.value|default:'' }}"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    {% if form.start_time.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.start_time.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <label for="{{ form.status.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                    Status
+                </label>
+                <select name="status" id="{{ form.status.id_for_label }}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    {% for value, label in form.fields.status.choices %}
+                    <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <hr class="my-4">
+            <h3 class="font-medium text-gray-800">Customer Information</h3>
+
+            <div>
+                <label for="{{ form.guest_name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                    Name *
+                </label>
+                <input type="text" name="guest_name" id="{{ form.guest_name.id_for_label }}"
+                       value="{{ form.guest_name.value|default:'' }}"
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                {% if form.guest_name.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.guest_name.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="{{ form.guest_email.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                        Email
+                    </label>
+                    <input type="email" name="guest_email" id="{{ form.guest_email.id_for_label }}"
+                           value="{{ form.guest_email.value|default:'' }}"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    {% if form.guest_email.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.guest_email.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="{{ form.guest_phone.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                        Phone
+                    </label>
+                    <input type="tel" name="guest_phone" id="{{ form.guest_phone.id_for_label }}"
+                           value="{{ form.guest_phone.value|default:'' }}"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    {% if form.guest_phone.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.guest_phone.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <label for="{{ form.notes.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                    Notes
+                </label>
+                <textarea name="notes" id="{{ form.notes.id_for_label }}" rows="2"
+                          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">{{ form.notes.value|default:'' }}</textarea>
+            </div>
+        </div>
+
+        <div class="mt-6 flex justify-end space-x-3">
+            <a href="{% url 'bookings:manage_list' shop.slug %}"
+               class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                Cancel
+            </a>
+            <button type="submit"
+                    class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                Create Booking
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

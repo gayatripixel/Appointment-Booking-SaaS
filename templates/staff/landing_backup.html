@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppointHub - Smart Appointment Management</title>
+
+    <!-- Favicon -->
+    {% load static %}
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .hero-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes grow-bar {
+            0% { transform: scaleY(0); }
+            100% { transform: scaleY(1); }
+        }
+        .bar-animate {
+            transform-origin: bottom;
+            animation: grow-bar 1s ease-out forwards;
+        }
+        .bar-animate:nth-child(1) { animation-delay: 0.1s; }
+        .bar-animate:nth-child(2) { animation-delay: 0.2s; }
+        .bar-animate:nth-child(3) { animation-delay: 0.3s; }
+        .bar-animate:nth-child(4) { animation-delay: 0.4s; }
+        .bar-animate:nth-child(5) { animation-delay: 0.5s; }
+        .bar-animate:nth-child(6) { animation-delay: 0.6s; }
+        .bar-animate:nth-child(7) { animation-delay: 0.7s; }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(102, 126, 234, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.8); }
+        }
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+    </style>
+   
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="{% url 'landing' %}" class="flex items-center space-x-2">
+                        <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold gradient-text">AppointHub</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#features" class="text-gray-600 hover:text-gray-900 transition">Features</a>
+                    <a href="#how-it-works" class="text-gray-600 hover:text-gray-900 transition">How It Works</a>
+                    <a href="#pricing" class="text-gray-600 hover:text-gray-900 transition">Pricing</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard:index' %}" class="text-gray-600 hover:text-gray-900 transition">Dashboard</a>
+                        <a href="{% url 'accounts:logout' %}" class="gradient-bg text-white px-5 py-2 rounded-lg font-medium hover:opacity-90 transition">Logout</a>
+                    {% else %}
+                        <a href="{% url 'accounts:login' %}" class="text-gray-600 hover:text-gray-900 transition">Login</a>
+                        <a href="{% url 'accounts:register' %}" class="gradient-bg text-white px-5 py-2 rounded-lg font-medium hover:opacity-90 transition">Get Started</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-pattern pt-32 pb-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-4xl mx-auto">
+                <!-- <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+                    Manage Appointments
+                    <span class="gradient-text">Effortlessly</span>
+                </h1>
+                <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+                    The all-in-one appointment scheduling platform for service businesses. 
+                    Streamline bookings, manage staff, and delight your customers.
+                </p> -->
+            <div class="text-center max-w-3xl mx-auto py-20">
+
+  <!-- Heading -->
+  <h1 class="text-5xl font-extrabold text-gray-900 leading-tight tracking-tight">
+    Manage Appointments
+    <span class="block bg-gradient-to-r from-purple-600 to-rose-500 bg-clip-text text-transparent">
+      Effortlessly
+    </span>
+  </h1>
+
+  <!-- Subtext -->
+  <p class="mt-5 text-lg text-gray-500 leading-relaxed">
+     The all-in-one appointment scheduling platform for service businesses. 
+                    Streamline bookings, manage staff, and delight your customers.
+  </p>
+
+  <!-- Buttons -->
+  <div class="mt-8 flex justify-center gap-4">
+
+    <a href="/shops/" 
+       class="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-rose-500 text-white font-medium shadow-lg hover:scale-105 transition-all">
+       Book Appointment
+    </a>
+
+    <a href="#features" 
+       class="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-100 transition">
+       Learn More
+    </a>
+
+   
+
+  </div>
+
+  <!-- Small note -->
+  <p class="mt-3 text-sm text-gray-400">
+    No sign-up required • Quick booking • Free 14-day trial
+  </p>
+
+</div>
+
+
+<!-- 
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="{% url 'accounts:register' %}" class="gradient-bg text-white px-8 py-4 rounded-xl font-semibold text-lg hover:opacity-90 transition shadow-lg">
+                        Start Free Trial
+                    </a>
+                    <a href="#features" class="bg-white text-gray-700 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition border border-gray-200">
+                        Learn More
+                    </a>
+                </div>
+                <p class="mt-6 text-sm text-gray-500">No credit card required • Free 14-day trial</p>
+            </div> -->
+            
+            <!-- Dashboard Preview -->
+             <!-- <div class="mt-16 relative">
+                <div class="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200 hover:shadow-3xl transition-shadow duration-500">
+                    <div class="bg-gray-100 px-4 py-3 flex items-center space-x-2">
+                        <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                        <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                        <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <span class="ml-4 text-xs text-gray-400">AppointHub Dashboard</span>
+                    </div>
+                    <div class="p-8 bg-gradient-to-br from-purple-50 to-indigo-50">
+                        <div class="grid grid-cols-4 gap-4 mb-6">
+                            <div class="bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 group">
+                                <div class="flex items-center justify-between">
+                                    <p class="text-sm text-gray-500">Today's Appointments</p>
+                                    <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200 transition-colors">
+                                        <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p class="text-3xl font-bold text-gray-900 mt-2">12</p>
+                                <p class="text-xs text-green-500 mt-1 flex items-center">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+                                    15% from yesterday
+                                </p>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 group">
+                                <div class="flex items-center justify-between">
+                                    <p class="text-sm text-gray-500">This Week</p>
+                                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p class="text-3xl font-bold text-gray-900 mt-2">48</p>
+                                <p class="text-xs text-green-500 mt-1 flex items-center">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+                                    8% from last week
+                                </p>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 group">
+                                <div class="flex items-center justify-between">
+                                    <p class="text-sm text-gray-500">Revenue</p>
+                                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-200 transition-colors">
+                                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p class="text-3xl font-bold text-gray-900 mt-2">₹4,280</p>
+                                <p class="text-xs text-green-500 mt-1 flex items-center">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+                                    23% this month
+                                </p>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 group">
+                                <div class="flex items-center justify-between">
+                                    <p class="text-sm text-gray-500">Customers</p>
+                                    <div class="w-8 h-8 bg-pink-100 rounded-lg flex items-center justify-center group-hover:bg-pink-200 transition-colors">
+                                        <svg class="w-4 h-4 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p class="text-3xl font-bold text-gray-900 mt-2">1,245</p>
+                                <p class="text-xs text-green-500 mt-1 flex items-center">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+                                    12 new today
+                                </p>
+                            </div>
+                        </div> -->
+                        <!-- Analytics Chart Mockup -->
+                        <!-- <div class="grid grid-cols-3 gap-4"> -->
+                            <!-- Bar Chart -->
+                            <!-- <div class="col-span-2 bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition-shadow">
+                                <div class="flex justify-between items-center mb-6">
+                                    <div>
+                                        <p class="text-base font-semibold text-gray-800">Weekly Bookings</p>
+                                        <p class="text-xs text-gray-400 mt-0.5">Appointments overview</p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded-full font-medium">+12.5%</span>
+                                        <span class="text-xs text-gray-400">vs last week</span>
+                                    </div>
+                                </div> -->
+                                <!-- Chart with animated bars -->
+                                <!-- <div class="flex items-end justify-between h-32 gap-3 px-2">
+                                    <div class="flex flex-col items-center flex-1 group">
+                                        <div class="relative w-full">
+                                            <div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs px-2 py-1 rounded">8</div>
+                                            <div class="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t-lg transition-all duration-500 hover:from-purple-700 hover:to-purple-500" style="height: 64px; animation: growUp 1s ease-out"></div>
+                                        </div>
+                                        <span class="text-xs text-gray-500 mt-2 font-medium">Mon</span>
+                                    </div>
+                                    <div class="flex flex-col items-center flex-1 group">
+                                        <div class="relative w-full">
+                                            <div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs px-2 py-1 rounded">12</div>
+                                            <div class="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t-lg transition-all duration-500 hover:from-purple-700 hover:to-purple-500" style="height: 96px; animation: growUp 1s ease-out 0.1s backwards"></div>
+                                        </div>
+                                        <span class="text-xs text-gray-500 mt-2 font-medium">Tue</span>
+                                    </div>
+                                    <div class="flex flex-col items-center flex-1 group">
+                                        <div class="relative w-full">
+                                            <div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs px-2 py-1 rounded">10</div>
+                                            <div class="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t-lg transition-all duration-500 hover:from-purple-700 hover:to-purple-500" style="height: 80px; animation: growUp 1s ease-out 0.2s backwards"></div>
+                                        </div>
+                                        <span class="text-xs text-gray-500 mt-2 font-medium">Wed</span>
+                                    </div>
+                                    <div class="flex flex-col items-center flex-1 group">
+                                        <div class="relative w-full">
+                                            <div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs px-2 py-1 rounded">15</div>
+                                            <div class="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-t-lg transition-all duration-500 hover:from-purple-700 hover:to-purple-500" style="height: 120px; animation: growUp 1s ease-out 0.3s backwards"></div>
+                                        </div>
+                                        <span class="text-xs text-gray-500 mt-2 font-medium">Thu</span>
+                                    </div>
+                                    <div class="flex flex-col items-center flex-1 group">
+                                        <div class="relative w-full">
+                                            <div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs px-2 py-1 rounded">18</div>
+                                            <div class="w-full bg-gradient-to-t from-indigo-600 to-purple-500 rounded-t-lg transition-all duration-500 hover:from-indigo-700 hover:to-purple-600 ring-2 ring-indigo-200" style="height: 128px; animation: growUp 1s ease-out 0.4s backwards"></div>
+                                        </div>
+                                        <span class="text-xs text-purple-600 mt-2 font-semibold">Fri</span>
+                                    </div>
+                                    <div class="flex flex-col items-center flex-1 group">
+                                        <div class="relative w-full">
+                                            <div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs px-2 py-1 rounded">14</div>
+                                            <div class="w-full bg-gradient-to-t from-purple-500 to-purple-300 rounded-t-lg transition-all duration-500 hover:from-purple-600 hover:to-purple-400" style="height: 112px; animation: growUp 1s ease-out 0.5s backwards"></div>
+                                        </div>
+                                        <span class="text-xs text-gray-500 mt-2 font-medium">Sat</span>
+                                    </div>
+                                    <div class="flex flex-col items-center flex-1 group">
+                                        <div class="relative w-full">
+                                            <div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-xs px-2 py-1 rounded">6</div>
+                                            <div class="w-full bg-gradient-to-t from-purple-400 to-purple-200 rounded-t-lg transition-all duration-500 hover:from-purple-500 hover:to-purple-300" style="height: 48px; animation: growUp 1s ease-out 0.6s backwards"></div>
+                                        </div>
+                                        <span class="text-xs text-gray-500 mt-2 font-medium">Sun</span>
+                                    </div>
+                                </div>
+                                 Chart legend -->
+                                <!-- <div class="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-gray-100">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-3 h-3 bg-gradient-to-r from-purple-600 to-purple-400 rounded"></div>
+                                        <span class="text-xs text-gray-500">Bookings</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-3 h-3 bg-gradient-to-r from-indigo-600 to-purple-500 rounded ring-1 ring-indigo-200"></div>
+                                        <span class="text-xs text-gray-500">Peak Day</span>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <!-- Upcoming Appointments -->
+                            <!-- <div class="bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-shadow">
+                                <div class="flex items-center justify-between mb-4">
+                                    <p class="text-base font-semibold text-gray-800">Upcoming Today</p>
+                                    <span class="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center text-xs font-bold text-purple-600">3</span>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="flex items-center gap-3 p-3 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl border border-purple-100 hover:border-purple-200 transition-colors cursor-pointer group">
+                                        <div class="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-sm">JD</div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm font-semibold text-gray-800 truncate">Gayatri Thakare</p>
+                                            <p class="text-xs text-gray-500 flex items-center gap-1">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                9:00 AM - Haircut
+                                            </p>
+                                        </div>
+                                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                                    </div>
+                                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer group">
+                                        <div class="w-10 h-10 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-sm">SM</div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm font-semibold text-gray-800 truncate">Swarnim Kale</p>
+                                            <p class="text-xs text-gray-500 flex items-center gap-1">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                10:30 AM - Color
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer group">
+                                        <div class="w-10 h-10 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-sm">AW</div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="text-sm font-semibold text-gray-800 truncate">Sonu Monu</p>
+                                            <p class="text-xs text-gray-500 flex items-center gap-1">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                2:00 PM - Styling
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="w-full mt-4 py-2 text-xs font-medium text-purple-600 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+                                    View All Appointments →
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-3/4 h-8 bg-gradient-to-b from-gray-200/50 to-transparent blur-xl"></div>
+            </div> 
+        </div> --> 
+
+     <div class="relative mt-20">
+
+  <!-- Background Glow -->
+  <div class="glow-bg top-0 left-0"></div>
+  <div class="glow-bg bottom-0 right-0"></div>
+
+  <div class="grid md:grid-cols-3 gap-6">
+
+    <div class="glass p-6 float shadow-xl">
+      <h3 class="text-xl font-semibold text-gray-800">💇‍♀️ Salon Booking</h3>
+      <p class="text-gray-500 mt-2">Book haircuts, styling & beauty services easily.</p>
+    </div>
+
+    <div class="glass p-6 float shadow-xl" style="animation-delay: 1s;">
+      <h3 class="text-xl font-semibold text-gray-800">🏥 Clinic Appointments</h3>
+      <p class="text-gray-500 mt-2">Schedule doctor visits without waiting.</p>
+    </div>
+
+    <div class="glass p-6 float shadow-xl" style="animation-delay: 2s;">
+      <h3 class="text-xl font-semibold text-gray-800">💆 Spa & Wellness</h3>
+      <p class="text-gray-500 mt-2">Relax with massage & wellness bookings.</p>
+    </div>
+
+  </div>
+</div>
+<!-- <div class="mt-24 text-center">
+  <h2 class="text-3xl font-bold text-gray-800">How It Works ⚡</h2>
+
+  <div class="grid md:grid-cols-3 gap-6 mt-10">
+
+    <div class="p-6 rounded-xl bg-gray-50 shadow hover:shadow-2xl transition transform hover:-translate-y-2">
+      <h3 class="text-xl font-semibold">1️⃣ Choose Service</h3>
+      <p class="text-gray-500 mt-2">Select salon, clinic or service.</p>
+    </div>
+
+    <div class="p-6 rounded-xl bg-gray-50  shadow hover:shadow-2xl transition transform hover:-translate-y-2">
+      <h3 class="text-xl font-semibold">2️⃣ Pick Time</h3>
+      <p class="text-gray-500 mt-2">Select your preferred slot.</p>
+    </div>
+
+    <div class="p-6 rounded-xl bg-gray-50 shadow hover:shadow-2xl transition transform hover:-translate-y-2">
+      <h3 class="text-xl font-semibold">3️⃣ Book Instantly</h3>
+      <p class="text-gray-500 mt-2">Confirm booking in seconds.</p>
+    </div>
+
+  </div>
+</div> -->
+
+<div class="mt-24 text-center relative">
+  <h2 class="text-3xl font-bold text-gray-800">How It Works</h2>
+  <p class="text-gray-500 mt-2">Book your appointment in 3 simple steps</p>
+
+  <!-- Progress Line -->
+  <div class="hidden md:block absolute top-[110px] left-0 right-0 z-0">
+    <div class="h-1 bg-gray-200 mx-20 rounded-full overflow-hidden">
+      <div class="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 animate-progress"></div>
+    </div>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-8 mt-12 relative z-10">
+
+    <!-- Step 1 -->
+    <div class="p-6 rounded-2xl bg-white border border-gray-100 
+                shadow-sm hover:shadow-lg transition-all duration-300 
+                hover:-translate-y-1">
+
+      <div class="step-circle">
+        1
+      </div>
+
+      <h3 class="text-lg font-semibold mt-4 text-gray-800">
+        Choose Service
+      </h3>
+
+      <p class="text-gray-500 text-sm mt-2">
+        Select your preferred salon, clinic or service.
+      </p>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="p-6 rounded-2xl bg-white border border-gray-100 
+                shadow-sm hover:shadow-lg transition-all duration-300 
+                hover:-translate-y-1">
+
+      <div class="step-circle pink">
+        2
+      </div>
+
+      <h3 class="text-lg font-semibold mt-4 text-gray-800">
+        Pick Time
+      </h3>
+
+      <p class="text-gray-500 text-sm mt-2">
+        Choose a convenient date and time slot.
+      </p>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="p-6 rounded-2xl bg-white border border-gray-100 
+                shadow-sm hover:shadow-lg transition-all duration-300 
+                hover:-translate-y-1">
+
+      <div class="step-circle indigo">
+        3
+      </div>
+
+      <h3 class="text-lg font-semibold mt-4 text-gray-800">
+        Confirm Booking
+      </h3>
+
+      <p class="text-gray-500 text-sm mt-2">
+        Book instantly and get confirmation.
+      </p>
+    </div>
+
+  </div>
+</div>
+<style>
+/* Progress animation */
+@keyframes progressMove {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.animate-progress {
+  width: 0;
+  animation: progressMove 8s ease forwards;
+}
+
+/* Step circles */
+.step-circle {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: #ede9fe;
+  color: #7c3aed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.step-circle.pink {
+  background: #fce7f3;
+  color: #db2777;
+}
+
+.step-circle.indigo {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+/* Hover effect */
+.step-circle:hover {
+  transform: scale(1.1);
+}
+</style>
+
+
+
+
+
+<div class="mt-24 text-center">
+
+  <div class="bg-gradient-to-r from-purple-600 to-pink-500 
+              text-white p-10 rounded-2xl shadow-xl">
+
+    <h2 class="text-3xl font-bold">
+      Ready to Book Your Appointment?
+    </h2>
+
+    <p class="mt-3 opacity-90">
+      Discover services near you and book instantly.
+    </p>
+
+    <a href="/shops/" 
+       class="inline-block mt-6 px-6 py-3 bg-white text-purple-600 
+       rounded-xl font-semibold hover:scale-105 transition">
+       
+       Explore Now 
+    </a>
+
+  </div>
+
+</div>     
+
+
+  <style>
+.glass {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.glow-bg {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(168,85,247,0.4), transparent);
+  filter: blur(80px);
+  z-index: -1;
+}
+
+@keyframes floatCard {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+.float {
+  animation: floatCard 4s ease-in-out infinite;
+}
+</style>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-4 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Everything You Need</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Powerful features to help you manage your business efficiently
+                </p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="feature-card bg-gray-50 p-8 rounded-2xl transition duration-300">
+                    <div class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Smart Scheduling</h3>
+                    <p class="text-gray-600">
+                        Intelligent booking system that prevents double-bookings and optimizes your schedule automatically.
+                    </p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="feature-card bg-gray-50 p-8 rounded-2xl transition duration-300">
+                    <div class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Staff Management</h3>
+                    <p class="text-gray-600">
+                        Manage your team's availability, assign services, and track performance all in one place.
+                    </p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="feature-card bg-gray-50 p-8 rounded-2xl transition duration-300">
+                    <div class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Analytics & Reports</h3>
+                    <p class="text-gray-600">
+                        Get insights into your business with detailed analytics, revenue tracking, and custom reports.
+                    </p>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="feature-card bg-gray-50 p-8 rounded-2xl transition duration-300">
+                    <div class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Automated Reminders</h3>
+                    <p class="text-gray-600">
+                        Reduce no-shows with automated email reminders sent to customers before appointments.
+                    </p>
+                </div>
+                
+                <!-- Feature 5 -->
+                <div class="feature-card bg-gray-50 p-8 rounded-2xl transition duration-300">
+                    <div class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Multi-Shop Support</h3>
+                    <p class="text-gray-600">
+                        Manage multiple locations from a single dashboard with location-specific settings.
+                    </p>
+                </div>
+                
+                <!-- Feature 6 -->
+                <div class="feature-card bg-gray-50 p-8 rounded-2xl transition duration-300">
+                    <div class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Secure & Reliable</h3>
+                    <p class="text-gray-600">
+                        Enterprise-grade security with encrypted data storage and 99.9% uptime guarantee.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="py-20 px-4 bg-gray-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">How It Works</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Get started in minutes with our simple setup process
+                </p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold">1</div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Create Your Account</h3>
+                    <p class="text-gray-600">Sign up in seconds and set up your business profile with your services and staff.</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold">2</div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Configure Your Shop</h3>
+                    <p class="text-gray-600">Add your services, set pricing, define working hours, and invite your team members.</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold">3</div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Start Booking</h3>
+                    <p class="text-gray-600">Share your booking page and let customers schedule appointments 24/7.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 px-4 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Simple Pricing</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Choose the plan that fits your business
+                </p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <!-- Free Plan -->
+                <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Starter</h3>
+                    <p class="text-gray-600 mb-6">Perfect for getting started</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-gray-900">₹0</span>
+                        <span class="text-gray-600">/month</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-gray-600">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            Up to 50 appointments/month
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            1 staff member
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            Email reminders
+                        </li>
+                    </ul>
+                    <a href="{% url 'accounts:register' %}" class="block text-center py-3 px-6 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-100 transition">
+                        Get Started
+                    </a>
+                </div>
+                
+                <!-- Pro Plan -->
+                <div class="gradient-bg rounded-2xl p-8 text-white relative transform scale-105">
+                    <div class="absolute top-0 right-0 bg-yellow-400 text-gray-900 text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-xl">POPULAR</div>
+                    <h3 class="text-xl font-semibold mb-2">Professional</h3>
+                    <p class="text-purple-100 mb-6">For growing businesses</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold">₹299</span>
+                        <span class="text-purple-100">/month</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-yellow-400 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            Unlimited appointments
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-yellow-400 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            Up to 10 staff members
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-yellow-400 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            SMS & Email reminders
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-yellow-400 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            Advanced analytics
+                        </li>
+                    </ul>
+                    <a href="{% url 'accounts:register' %}" class="block text-center py-3 px-6 rounded-lg bg-white text-purple-600 font-medium hover:bg-gray-100 transition">
+                        Start Free Trial
+                    </a>
+                </div>
+                
+                <!-- Enterprise Plan -->
+                <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Enterprise</h3>
+                    <p class="text-gray-600 mb-6">For large organizations</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold text-gray-900">₹999</span>
+                        <span class="text-gray-600">/month</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-gray-600">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            Everything in Pro
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            Unlimited staff
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            Multi-location
+                        </li>
+                        <li class="flex items-center text-gray-600">
+                            <svg class="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                            Priority support
+                        </li>
+                    </ul>
+                    <a href="{% url 'accounts:register' %}" class="block text-center py-3 px-6 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-100 transition">
+                        Contact Sales
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 px-4 gradient-bg">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl font-bold text-white mb-6">Ready to Get Started?</h2>
+            <p class="text-xl text-purple-100 mb-10">
+                Join thousands of businesses using AppointHub to manage their appointments.
+            </p>
+            <a href="{% url 'accounts:register' %}" class="inline-block bg-white text-purple-600 px-10 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition shadow-lg">
+                Start Your Free Trial
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-12 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold text-white">AppointHub</span>
+                    </div>
+                    <p class="text-sm">Smart appointment management for modern businesses.</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Product</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#features" class="hover:text-white transition">Features</a></li>
+                        <li><a href="#pricing" class="hover:text-white transition">Pricing</a></li>
+                        <li><a href="#" class="hover:text-white transition">Integrations</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Company</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition">About</a></li>
+                        <li><a href="#" class="hover:text-white transition">Blog</a></li>
+                        <li><a href="#" class="hover:text-white transition">Careers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Support</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Help Center</a></li>
+                        <li><a href="#" class="hover:text-white transition">Contact</a></li>
+                        <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-sm">
+                <p>&copy; 2025 AppointHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,1116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AppointHub - Smart Appointment Management</title>
+
+    <!-- Favicon -->
+    {% load static %}
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="{% static 'images/favicon.svg' %}"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+  
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .gradient-bg {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+      .gradient-text {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      }
+      .hero-pattern {
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+      @keyframes grow-bar {
+        0% {
+          transform: scaleY(0);
+        }
+        100% {
+          transform: scaleY(1);
+        }
+      }
+      .bar-animate {
+        transform-origin: bottom;
+        animation: grow-bar 1s ease-out forwards;
+      }
+      .bar-animate:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .bar-animate:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .bar-animate:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      .bar-animate:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+      .bar-animate:nth-child(5) {
+        animation-delay: 0.5s;
+      }
+      .bar-animate:nth-child(6) {
+        animation-delay: 0.6s;
+      }
+      .bar-animate:nth-child(7) {
+        animation-delay: 0.7s;
+      }
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+        }
+        50% {
+          box-shadow: 0 0 20px rgba(102, 126, 234, 0.8);
+        }
+      }
+      .pulse-glow {
+        animation: pulse-glow 2s ease-in-out infinite;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm fixed w-full z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex items-center">
+            <a href="{% url 'landing' %}" class="flex items-center space-x-2">
+              <div
+                class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center"
+              >
+                <svg
+                  class="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+              </div>
+              <span class="text-xl font-bold gradient-text">AppointHub</span>
+            </a>
+          </div>
+          <div class="hidden md:flex items-center space-x-8">
+            <a
+              href="#features"
+              class="text-gray-600 hover:text-gray-900 transition"
+              >Features</a
+            >
+            <a
+              href="#how-it-works"
+              class="text-gray-600 hover:text-gray-900 transition"
+              >How It Works</a
+            >
+            <a
+              href="#pricing"
+              class="text-gray-600 hover:text-gray-900 transition"
+              >Pricing</a
+            >
+          </div>
+          <div class="flex items-center space-x-4">
+            {% if user.is_authenticated %}
+            <a
+              href="{% url 'dashboard:index' %}"
+              class="text-gray-600 hover:text-gray-900 transition"
+              >Dashboard</a
+            >
+            <a
+              href="{% url 'accounts:logout' %}"
+              class="gradient-bg text-white px-5 py-2 rounded-lg font-medium hover:opacity-90 transition"
+              >Logout</a
+            >
+            {% else %}
+            <a
+              href="{% url 'accounts:login' %}"
+              class="text-gray-600 hover:text-gray-900 transition"
+              >Login</a
+            >
+            <a
+              href="{% url 'accounts:register' %}"
+              class="gradient-bg text-white px-5 py-2 rounded-lg font-medium hover:opacity-90 transition"
+              >Get Started</a
+            >
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-pattern pt-32 pb-20 px-4">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center max-w-4xl mx-auto">
+          <!-- Heading -->
+          <h1
+            class="text-5xl font-extrabold text-gray-900 leading-tight tracking-tight"
+          >
+            Manage Appointments
+            <span
+              class="block bg-gradient-to-r from-purple-600 to-rose-500 bg-clip-text text-transparent"
+            >
+              Effortlessly
+            </span>
+          </h1>
+
+          <!-- Subtext -->
+          <p class="mt-5 text-lg text-gray-500 leading-relaxed">
+            The all-in-one appointment scheduling platform for service
+            businesses. Streamline bookings, manage staff, and delight your
+            customers.
+          </p>
+
+          <!-- Buttons -->
+          <div class="mt-8 flex justify-center gap-4">
+            <a
+              href="/shops/"
+              class="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-rose-500 text-white font-medium shadow-lg hover:scale-105 transition-all"
+            >
+              Book Appointment
+            </a>
+
+            <a
+              href="#features"
+              class="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-100 transition"
+            >
+              Learn More
+            </a>
+          </div>
+
+          <!-- Small note -->
+          <p class="mt-3 text-sm text-gray-400">
+            No sign-up required • Quick booking • Free 14-day trial
+          </p>
+        </div>
+
+        <div class="relative mt-20">
+          <!-- Background Glow -->
+          <div class="glow-bg top-0 left-0"></div>
+          <div class="glow-bg bottom-0 right-0"></div>
+
+          <div class="grid md:grid-cols-3 gap-6">
+            <div class="glass p-6 float shadow-xl">
+              <h3 class="text-xl font-semibold text-gray-800">
+                💇‍♀️ Salon Booking
+              </h3>
+              <p class="text-gray-500 mt-2">
+                Book haircuts, styling & beauty services easily.
+              </p>
+            </div>
+
+            <div class="glass p-6 float shadow-xl" style="animation-delay: 1s">
+              <h3 class="text-xl font-semibold text-gray-800">
+                🏥 Clinic Appointments
+              </h3>
+              <p class="text-gray-500 mt-2">
+                Schedule doctor visits without waiting.
+              </p>
+            </div>
+
+            <div class="glass p-6 float shadow-xl" style="animation-delay: 2s">
+              <h3 class="text-xl font-semibold text-gray-800">
+                💆 Spa & Wellness
+              </h3>
+              <p class="text-gray-500 mt-2">
+                Relax with massage & wellness bookings.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- <h2 class="text-3xl font-bold text-gray-800">How It Works ⚡</h2>
+
+        <div class="grid md:grid-cols-3 gap-6 mt-10">
+          <div
+            class="p-6 rounded-xl bg-gray-50 shadow hover:shadow-2xl transition transform hover:-translate-y-2"
+          >
+            <h3 class="text-xl font-semibold">1️⃣ Choose Service</h3>
+            <p class="text-gray-500 mt-2">Select salon, clinic or service.</p>
+          </div>
+
+          <div
+            class="p-6 rounded-xl bg-gray-50 shadow hover:shadow-2xl transition transform hover:-translate-y-2"
+          >
+            <h3 class="text-xl font-semibold">2️⃣ Pick Time</h3>
+            <p class="text-gray-500 mt-2">Select your preferred slot.</p>
+          </div>
+
+          <div
+            class="p-6 rounded-xl bg-gray-50 shadow hover:shadow-2xl transition transform hover:-translate-y-2"
+          >
+            <h3 class="text-xl font-semibold">3️⃣ Book Instantly</h3>
+            <p class="text-gray-500 mt-2">Confirm booking in seconds.</p>
+          </div>
+        </div> -->
+      </div>
+
+      <div class="mt-24 text-center relative">
+        <h2 class="text-3xl font-bold text-gray-800">How It Works</h2>
+        <p class="text-gray-500 mt-2">
+          Book your appointment in 3 simple steps
+        </p>
+
+        <!-- Progress Line -->
+        <div class="hidden md:block absolute top-[110px] left-0 right-0 z-0">
+          <div class="h-1 bg-gray-200 mx-20 rounded-full overflow-hidden">
+            <div
+              class="h-full bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 animate-progress"
+            ></div>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8 mt-12 relative z-10">
+          <!-- Step 1 -->
+          <div
+            class="p-6 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+          >
+            <div class="step-circle">1</div>
+
+            <h3 class="text-lg font-semibold mt-4 text-gray-800">
+              Choose Service
+            </h3>
+
+            <p class="text-gray-500 text-sm mt-2">
+              Select your preferred salon, clinic or service.
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div
+            class="p-6 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+          >
+            <div class="step-circle pink">2</div>
+
+            <h3 class="text-lg font-semibold mt-4 text-gray-800">Pick Time</h3>
+
+            <p class="text-gray-500 text-sm mt-2">
+              Choose a convenient date and time slot.
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div
+            class="p-6 rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+          >
+            <div class="step-circle indigo">3</div>
+
+            <h3 class="text-lg font-semibold mt-4 text-gray-800">
+              Confirm Booking
+            </h3>
+
+            <p class="text-gray-500 text-sm mt-2">
+              Book instantly and get confirmation.
+            </p>
+          </div>
+        </div>
+      </div>
+      <style>
+        /* Progress animation */
+        @keyframes progressMove {
+          0% {
+            width: 0%;
+          }
+          100% {
+            width: 100%;
+          }
+        }
+
+        .animate-progress {
+          width: 0;
+          animation: progressMove 8s ease forwards;
+        }
+
+        /* Step circles */
+        .step-circle {
+          width: 48px;
+          height: 48px;
+          margin: 0 auto;
+          border-radius: 50%;
+          background: #ede9fe;
+          color: #7c3aed;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 600;
+          font-size: 16px;
+          transition: all 0.3s ease;
+        }
+
+        .step-circle.pink {
+          background: #fce7f3;
+          color: #db2777;
+        }
+
+        .step-circle.indigo {
+          background: #e0e7ff;
+          color: #4338ca;
+        }
+
+        /* Hover effect */
+        .step-circle:hover {
+          transform: scale(1.1);
+        }
+      </style>
+
+      <div class="mt-24 text-center">
+        <div
+          class="bg-gradient-to-r from-purple-600 to-pink-500 text-white p-10 rounded-2xl shadow-xl"
+        >
+          <h2 class="text-3xl font-bold">Ready to Book Your Appointment?</h2>
+
+          <p class="mt-3 opacity-90">
+            Discover services near you and book instantly.
+          </p>
+
+          <a
+            href="/shops/"
+            class="inline-block mt-6 px-6 py-3 bg-white text-purple-600 rounded-xl font-semibold hover:scale-105 transition"
+          >
+            Explore Now 
+          </a>
+        </div>
+      </div>
+
+      <style>
+        .glass {
+          background: rgba(255, 255, 255, 0.15);
+          backdrop-filter: blur(12px);
+          border-radius: 20px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .glow-bg {
+          position: absolute;
+          width: 400px;
+          height: 400px;
+          background: radial-gradient(
+            circle,
+            rgba(168, 85, 247, 0.4),
+            transparent
+          );
+          filter: blur(80px);
+          z-index: -1;
+        }
+
+        @keyframes floatCard {
+          0% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-15px);
+          }
+          100% {
+            transform: translateY(0px);
+          }
+        }
+
+        .float {
+          animation: floatCard 4s ease-in-out infinite;
+        }
+      </style>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-4 bg-white">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold text-gray-900 mb-4">
+            Why Choose AppointHub?
+          </h2>
+          <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+            Smart tools designed to simplify bookings for both customers and
+            businesses
+          </p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+          <!-- Feature 1 -->
+          <div
+            class="feature-card bg-white border border-gray-100 hover:border-purple-200 p-8 rounded-2xl transition duration-300"
+          >
+            <div
+              class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-6"
+            >
+              <svg
+                class="w-7 h-7 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">
+              Easy Booking
+            </h3>
+            <p class="text-gray-600">
+              Book appointments in just a few clicks without any hassle.
+            </p>
+          </div>
+
+          <!-- Feature 2 -->
+          <div
+            class="feature-card bg-white border border-gray-100 hover:border-purple-200 p-8 rounded-2xl transition duration-300"
+          >
+            <div
+              class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-6"
+            >
+              <svg
+                class="w-7 h-7 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">
+              Real-Time Availability
+            </h3>
+            <p class="text-gray-600">
+              See live available slots and choose your preferred time instantly.
+            </p>
+          </div>
+
+          <!-- Feature 3 -->
+          <div
+            class="feature-card bg-white border border-gray-100 hover:border-purple-200 p-8 rounded-2xl transition duration-300"
+          >
+            <div
+              class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-6"
+            >
+              <svg
+                class="w-7 h-7 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">
+              Multiple Services
+            </h3>
+            <p class="text-gray-600">
+              Explore salons, clinics, and wellness services in one place. and
+              custom reports.
+            </p>
+          </div>
+
+          <!-- Feature 4 -->
+          <div
+            class="feature-card bg-white border border-gray-100 hover:border-purple-200 p-8 rounded-2xl transition duration-300"
+          >
+            <div
+              class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-6"
+            >
+              <svg
+                class="w-7 h-7 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">
+              Instant Confirmation
+            </h3>
+            <p class="text-gray-600">
+              Get booking confirmation immediately after scheduling.
+            </p>
+          </div>
+
+          <!-- Feature 5 -->
+          <div
+            class="feature-card bg-white border border-gray-100 hover:border-purple-200 p-8 rounded-2xl transition duration-300"
+          >
+            <div
+              class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-6"
+            >
+              <svg
+                class="w-7 h-7 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">
+              Nearby Businesses
+            </h3>
+            <p class="text-gray-600">Discover services near your location</p>
+          </div>
+
+          <!-- Feature 6 -->
+          <div
+            class="feature-card bg-white border border-gray-100 hover:border-purple-200 p-8 rounded-2xl transition duration-300"
+          >
+            <div
+              class="w-14 h-14 gradient-bg rounded-xl flex items-center justify-center mb-6"
+            >
+              <svg
+                class="w-7 h-7 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">
+              Secure Booking
+            </h3>
+            <p class="text-gray-600">
+              Your data and bookings are safe and protected.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Business Insights Section -->
+    <section
+      class="py-28 px-4 bg-gradient-to-b from-white via-indigo-50/30 to-white border-t border-gray-100"
+    >
+      <div class="max-w-6xl mx-auto">
+        <!-- Heading -->
+        <div class="text-center mb-20">
+          <h2 class="text-4xl font-semibold text-gray-900 tracking-tight">
+            Built for Modern Service Businesses
+          </h2>
+          <p class="text-gray-500 mt-4 text-lg max-w-2xl mx-auto">
+            Everything you need to manage bookings, customers, staff and
+            operations in one powerful SaaS platform
+          </p>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="grid md:grid-cols-2 gap-14 items-center">
+          <!-- Left Feature List -->
+          <div class="space-y-6">
+            <!-- Feature Card -->
+            <div
+              class="flex items-start gap-4 p-5 rounded-xl bg-white shadow-sm border border-gray-100 hover:shadow-md transition"
+            >
+              <div
+                class="w-11 h-11 flex items-center justify-center rounded-xl bg-indigo-100"
+              >
+                <span class="text-indigo-600 text-lg font-bold">⚡</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold text-gray-900">
+                  Real-time Availability
+                </h3>
+                <p class="text-gray-500 text-sm mt-1">
+                  Customers see live slots and book instantly without conflicts.
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="flex items-start gap-4 p-5 rounded-xl bg-white shadow-sm border border-gray-100 hover:shadow-md transition"
+            >
+              <div
+                class="w-11 h-11 flex items-center justify-center rounded-xl bg-indigo-100"
+              >
+                <span class="text-indigo-600 text-lg font-bold">🏢</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold text-gray-900">
+                  Multi-Service Support
+                </h3>
+                <p class="text-gray-500 text-sm mt-1">
+                  Manage salons, clinics, and multiple businesses from one
+                  dashboard.
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="flex items-start gap-4 p-5 rounded-xl bg-white shadow-sm border border-gray-100 hover:shadow-md transition"
+            >
+              <div
+                class="w-11 h-11 flex items-center justify-center rounded-xl bg-indigo-100"
+              >
+                <span class="text-indigo-600 text-lg font-bold">📅</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold text-gray-900">
+                  Smart Scheduling
+                </h3>
+                <p class="text-gray-500 text-sm mt-1">
+                  Automated slot management prevents overlap and booking errors.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Stats Card -->
+          <div class="relative">
+            <!-- Glow Background -->
+            <div
+              class="absolute -inset-4 bg-gradient-to-r from-indigo-200/40 to-purple-200/40 blur-2xl rounded-3xl"
+            ></div>
+
+            <div
+              class="relative bg-white rounded-2xl p-10 shadow-xl border border-gray-100"
+            >
+              <h3 class="text-xl font-semibold text-gray-900 mb-8">
+                Platform Highlights
+              </h3>
+
+              <div class="space-y-5 text-sm">
+                <div
+                  class="flex justify-between items-center pb-3 border-b border-gray-100"
+                >
+                  <span class="text-gray-600">Booking System</span>
+                  <span
+                    class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-700 font-medium"
+                    >Active</span
+                  >
+                </div>
+
+                <div
+                  class="flex justify-between items-center pb-3 border-b border-gray-100"
+                >
+                  <span class="text-gray-600">Staff Management</span>
+                  <span
+                    class="px-3 py-1 text-xs rounded-full bg-indigo-100 text-indigo-700 font-medium"
+                    >Enabled</span
+                  >
+                </div>
+
+                <div
+                  class="flex justify-between items-center pb-3 border-b border-gray-100"
+                >
+                  <span class="text-gray-600">Notifications</span>
+                  <span
+                    class="px-3 py-1 text-xs rounded-full bg-purple-100 text-purple-700 font-medium"
+                    >Integrated</span
+                  >
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-600">Multi-Shop Support</span>
+                  <span
+                    class="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700 font-medium"
+                    >Available</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 px-4 bg-white">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold text-gray-900 mb-4">
+            Flexible Plans for Every Booking Need
+          </h2>
+          <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+            Choose a plan that gives you better booking experience and
+            convenience
+          </p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <!-- Free Plan -->
+          <div
+            class="bg-gray-50 rounded-2xl p-8 border border-gray-200 transition-all duration-300 ease-in-out transform hover:scale-105 hover:-translate-y-2 hover:shadow-xl cursor-pointer"
+          >
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">
+              Basic Access
+            </h3>
+            <p class="text-gray-600 mb-6">Start booking appointments easily</p>
+            <div class="mb-6">
+              <span class="text-4xl font-bold text-gray-900">₹0</span>
+              <span class="text-gray-600">/month</span>
+            </div>
+            <ul class="space-y-3 mb-8">
+              <li class="flex items-center text-gray-600">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-3"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Up to 50 appointments/month
+              </li>
+              <li class="flex items-center text-gray-600">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-3"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Standard reminders
+              </li>
+              <li class="flex items-center text-gray-600">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-3"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Basic support
+              </li>
+            </ul>
+
+            <a
+              href="/shops/?plan=basic"
+              class="block text-center py-3 px-6 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-100 transition"
+            >
+              Book Now
+            </a>
+          </div>
+
+          <!-- Pro Plan -->
+          <!-- <div class="gradient-bg rounded-2xl p-8 text-white relative transform scale-105 transition-all duration-300 ease-in-out transform"> -->
+          <div
+            class="gradient-bg rounded-2xl p-8 text-white relative transition-all duration-300 ease-in-out transform scale-105 hover:scale-110 hover:-translate-y-2 hover:shadow-2xl cursor-pointer"
+          >
+            <div
+              class="absolute top-0 right-0 bg-yellow-400 text-gray-900 text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-xl"
+            >
+              POPULAR
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Priority Booking</h3>
+            <p class="text-purple-100 mb-6">
+              Faster slots & smoother experience
+            </p>
+            <div class="mb-6">
+              <span class="text-4xl font-bold">₹299</span>
+              <span class="text-purple-100">/month</span>
+            </div>
+            <ul class="space-y-3 mb-8">
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-yellow-400 mr-3"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Unlimited appointments
+              </li>
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-yellow-400 mr-3"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Faster appointment slots
+              </li>
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-yellow-400 mr-3"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Email + SMS reminders
+              </li>
+              <li class="flex items-center">
+                <svg
+                  class="w-5 h-5 text-yellow-400 mr-3"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Priority support
+              </li>
+            </ul>
+            <a
+             href="{% url 'dashboard:subscribe' 'priority' %}"
+             class="block w-full text-center py-3 px-6 rounded-lg bg-white text-purple-600 font-medium hover:bg-gray-100 transition"
+            >
+              Upgrade Experience
+            </a>
+            <!-- <div class="mt-3 text-center">
+             <a href="{% url 'dashboard:payment_cancel' %}"
+               class="text-sm text-red-200 hover:text-white underline transition">
+                  Cancel Anytime
+             </a>
+           </div> -->
+          </div>
+
+          <!-- Enterprise Plan -->
+        
+          <div
+            class="bg-gray-50 rounded-2xl p-8 border border-gray-200 transition-all duration-300 ease-in-out transform hover:scale-105 hover:-translate-y-2 hover:shadow-xl cursor-pointer"
+          >
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">
+              Premium Experience
+            </h3>
+            <p class="text-gray-600 mb-6">
+              Best booking experience with priority support
+            </p>
+            <div class="mb-6">
+              <span class="text-4xl font-bold text-gray-900">₹999</span>
+              <span class="text-gray-600">/month</span>
+            </div>
+            <ul class="space-y-3 mb-8">
+              <li class="flex items-center text-gray-600">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-3"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Everything in Priority
+              </li>
+              <li class="flex items-center text-gray-600">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-3"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Instant confirmation
+              </li>
+              <li class="flex items-center text-gray-600">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-3"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                VIP support
+              </li>
+              <li class="flex items-center text-gray-600">
+                <svg
+                  class="w-5 h-5 text-green-500 mr-3"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                Best availability access
+              </li>
+            </ul>
+            <a href="{% url 'dashboard:subscribe' 'premium' %}"
+              class="block w-full text-center py-3 px-6 rounded-lg bg-white text-purple-600 font-medium hover:bg-gray-100 transition">           
+                Get Premium Access
+           </a>
+           <!-- <div class="mt-3 text-center">
+             <a href="{% url 'dashboard:payment_cancel' %}"
+              class="text-sm text-red-500 hover:text-red-700 underline transition">
+
+                Cancel Anytime
+
+              </a>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-12 px-4">
+      <div class="max-w-7xl mx-auto">
+        <div class="grid md:grid-cols-4 gap-8 mb-8">
+          <div>
+            <div class="flex items-center space-x-2 mb-4">
+              <div
+                class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center"
+              >
+                <svg
+                  class="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+              </div>
+              <span class="text-xl font-bold text-white">AppointHub</span>
+            </div>
+            <p class="text-sm">
+              Smart appointment management for modern businesses.
+            </p>
+          </div>
+          <div>
+            <h4 class="text-white font-semibold mb-4">Product</h4>
+            <ul class="space-y-2 text-sm">
+              <li>
+                <a href="#features" class="hover:text-white transition"
+                  >Features</a
+                >
+              </li>
+              <li>
+                <a href="#pricing" class="hover:text-white transition"
+                  >Pricing</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition">Integrations</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-white font-semibold mb-4">Company</h4>
+            <ul class="space-y-2 text-sm">
+              <li><a href="#" class="hover:text-white transition">About</a></li>
+              <li><a href="#" class="hover:text-white transition">Blog</a></li>
+              <li>
+                <a href="#" class="hover:text-white transition">Careers</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-white font-semibold mb-4">Support</h4>
+            <ul class="space-y-2 text-sm">
+              <li>
+                <a href="#" class="hover:text-white transition">Help Center</a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition">Contact</a>
+              </li>
+              <li>
+                <a href="#" class="hover:text-white transition"
+                  >Privacy Policy</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="border-t border-gray-800 pt-8 text-center text-sm">
+          <p>&copy; 2025 AppointHub. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+
+  </body>
+</html>

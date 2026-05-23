@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if request.GET.plan %}
+<div class="mb-4 p-3 bg-indigo-50 text-indigo-700 rounded-lg text-center">
+  You selected <b>{{ request.GET.plan|title }}</b> plan
+</div>
+{% endif %}
+
+<!-- PLAN UI -->
+{% if request.GET.plan == "premium" %}
+<div style="background:#fef3c7; padding:10px; margin-bottom:10px;">
+  ⭐ Premium Support Available
+</div>
+{% elif request.GET.plan == "priority" %}
+<div style="background:#dbeafe; padding:10px; margin-bottom:10px;">
+  ⚡ Priority Booking Enabled
+</div>
+{% endif %}
+
+<div style="max-width: 1200px; margin: auto; padding: 20px">
+  <h1
+    style="
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 25px;
+      text-align: center;
+    "
+  >
+    Explore Businesses
+  </h1>
+
+  <div
+    style="
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+    "
+  >
+    {% for shop in shops %}
+    <div
+      style="
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+      "
+      onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.15)'"
+      onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'"
+    >
+
+      {% if shop.logo %}
+      <img
+        src="{{ shop.logo.url }}"
+        style="width: 100%; height: 180px; object-fit: cover"
+      />
+      {% else %}
+      <div
+        style="
+          height: 180px;
+          background: #f3f4f6;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 14px;
+          color: #888;
+        "
+      >
+        No Image
+      </div>
+      {% endif %}
+
+      <div style="padding: 15px">
+        <h2 style="font-size: 18px; font-weight: 600; margin-bottom: 5px">
+          {{ shop.name }}
+        </h2>
+
+        <p style="color: #6b7280; font-size: 14px">
+          📍 {{ shop.city }}
+        </p>
+
+        <p style="font-size: 12px; color: #9ca3af; margin-top: 4px">
+          {{ shop.full_address }}
+        </p>
+
+        <a
+          href="{% url 'shops:public' shop.slug %}?plan={{ request.GET.plan }}"
+          style="
+            display: block;
+            margin-top: 12px;
+            text-align: center;
+            background: #111827;
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+          "
+          onmouseover="this.style.background='#374151'"
+          onmouseout="this.style.background='#111827'"
+        >
+          View Details
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

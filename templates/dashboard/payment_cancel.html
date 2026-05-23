@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Cancelled</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #111827, #1f2937);
+        }
+
+        .cancel-card {
+            animation: pop 0.5s ease;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0.85);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center px-4">
+
+    <div class="cancel-card bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center">
+
+        <!-- Cancel Icon -->
+        <div class="flex justify-center mb-6">
+            <div class="bg-red-100 p-5 rounded-full">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="w-16 h-16 text-red-600"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor">
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M6 18L18 6M6 6l12 12" />
+
+                </svg>
+
+            </div>
+        </div>
+
+        <!-- Heading -->
+        <h1 class="text-3xl font-bold text-gray-800 mb-3">
+            Payment Cancelled ❌
+        </h1>
+
+        <!-- Message -->
+        <p class="text-gray-600 leading-relaxed mb-6">
+            Your payment was not completed.
+            No amount has been charged from your account.
+            You can try again anytime to activate your subscription.
+        </p>
+
+        <!-- Warning Box -->
+        <div class="bg-red-50 border border-red-200 rounded-2xl py-4 px-4 mb-6">
+
+            <p class="text-red-700 text-lg font-bold">
+                Subscription Not Activated
+            </p>
+
+            <p class="text-sm text-red-600 mt-1">
+                Complete payment to unlock premium benefits
+            </p>
+
+        </div>
+
+        <!-- Benefits Preview -->
+        <div class="bg-gray-50 rounded-2xl p-4 mb-6 text-left">
+
+            <h3 class="font-bold text-gray-800 mb-3">
+                Premium Benefits
+            </h3>
+
+            <ul class="space-y-2 text-sm text-gray-600">
+
+                <li>✨ Priority Appointment Booking</li>
+
+                <li>✨ Premium Shop Access</li>
+
+                <li>✨ Exclusive Member Offers</li>
+
+                <li>✨ Faster Booking Confirmation</li>
+
+                <li>✨ Better Customer Support</li>
+
+            </ul>
+
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex flex-col gap-3">
+
+            <a href="/pricing/"
+               class="bg-red-600 hover:bg-red-700 transition text-white py-3 rounded-xl font-semibold shadow-lg">
+
+                Try Again
+
+            </a>
+
+            <a href="/"
+               class="border border-gray-300 hover:bg-gray-100 transition py-3 rounded-xl font-semibold text-gray-700">
+
+                Back to Home
+
+            </a>
+
+        </div>
+
+        <!-- Footer -->
+        <p class="text-xs text-gray-400 mt-5">
+            Your payment session was cancelled safely.
+        </p>
+
+    </div>
+
+</body>
+</html>

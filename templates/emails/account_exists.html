@@ -1,0 +1,27 @@
+{% extends 'emails/base.html' %}
+
+{% block title %}Registration Attempt - AppointHub{% endblock %}
+
+{% block content %}
+<h1>Registration Attempt Detected</h1>
+<p>Hi,</p>
+<p>Someone (hopefully you) tried to create a new AppointHub account using this email address: <strong>{{ email }}</strong></p>
+
+<p>However, an account with this email already exists.</p>
+
+<p>If this was you, you can:</p>
+
+<div style="text-align: center; margin: 20px 0;">
+    <a href="{{ login_url }}" class="button">Sign In to Your Account</a>
+</div>
+
+<p>Forgot your password? No problem:</p>
+
+<div style="text-align: center; margin: 20px 0;">
+    <a href="{{ reset_url }}" class="button" style="background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);">Reset Password</a>
+</div>
+
+<p>If you didn't attempt to register, you can safely ignore this email. Your account is secure.</p>
+
+<p>Best regards,<br>The AppointHub Team</p>
+{% endblock %}

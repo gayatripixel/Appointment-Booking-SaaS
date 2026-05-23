@@ -1,0 +1,164 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Activated</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+        }
+
+        .success-card {
+            animation: pop 0.5s ease;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0.85);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center px-4">
+
+    <div class="success-card bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center">
+
+        <!-- Success Icon -->
+        <div class="flex justify-center mb-6">
+            <div class="bg-green-100 p-5 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="w-16 h-16 text-green-600"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor">
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Heading -->
+        <h1 class="text-3xl font-bold text-gray-800 mb-3">
+            Subscription Activated 🎉
+        </h1>
+
+        <!-- Message -->
+        <p class="text-gray-600 leading-relaxed mb-6">
+
+            {% if plan == "priority" %}
+
+                Your priority membership is now active.
+                Enjoy faster bookings, priority appointments,
+                and exclusive customer benefits.
+
+            {% elif plan == "premium" %}
+
+                Your premium membership is now active.
+                Enjoy premium shop access, faster appointments,
+                and exclusive offers.
+
+            {% endif %}
+
+        </p>
+
+        <!-- Plan Badge -->
+        <div class="bg-green-50 border border-green-200 rounded-2xl py-4 px-4 mb-6">
+
+            {% if plan == "priority" %}
+
+                <p class="text-green-700 text-lg font-bold">
+                    ₹299 Paid Successfully
+                </p>
+
+                <p class="text-sm text-green-600 mt-1">
+                    Priority Experience Enabled
+                </p>
+
+            {% elif plan == "premium" %}
+
+                <p class="text-green-700 text-lg font-bold">
+                    ₹999 Paid Successfully
+                </p>
+
+                <p class="text-sm text-green-600 mt-1">
+                    Premium Experience Enabled
+                </p>
+
+            {% endif %}
+
+        </div>
+
+        <!-- Benefits -->
+        <div class="bg-gray-50 rounded-2xl p-4 mb-6 text-left">
+
+            <h3 class="font-bold text-gray-800 mb-3">
+                Your Benefits
+            </h3>
+
+            <ul class="space-y-2 text-sm text-gray-600">
+
+                {% if plan == "priority" %}
+
+                    <li>✅ Priority Appointment Booking</li>
+                    <li>✅ Faster Queue Access</li>
+                    <li>✅ Quick Booking Confirmation</li>
+                    <li>✅ Special Customer Support</li>
+                    <li>✅ Better Appointment Availability</li>
+
+                {% elif plan == "premium" %}
+
+                    <li>✅ Premium Shop Access</li>
+                    <li>✅ Priority Appointment Booking</li>
+                    <li>✅ Exclusive Member Offers</li>
+                    <li>✅ Faster Booking Confirmation</li>
+                    <li>✅ Better Customer Support</li>
+
+                {% endif %}
+
+            </ul>
+
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex flex-col gap-3">
+
+            <a href="http://127.0.0.1:8000/shops/"
+               class="bg-indigo-600 hover:bg-indigo-700 transition text-white py-3 rounded-xl font-semibold shadow-lg">
+
+                Explore Shops
+
+            </a>
+
+            <a href="/"
+               class="border border-gray-300 hover:bg-gray-100 transition py-3 rounded-xl font-semibold text-gray-700">
+
+                Back to Home
+
+            </a>
+
+        </div>
+
+        <!-- Footer -->
+        <p class="text-xs text-gray-400 mt-5">
+            Redirecting to shops shortly...
+        </p>
+
+    </div>
+
+</body>
+</html>

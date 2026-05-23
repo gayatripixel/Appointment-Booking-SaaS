@@ -1,0 +1,14 @@
+{% if slots %}
+<div class="grid grid-cols-3 sm:grid-cols-4 gap-2">
+    {% for value, display in slots %}
+    <a href="{% url 'bookings:confirm' shop.slug service.pk %}?{% if staff %}staff={{ staff.pk }}&{% endif %}date={{ selected_date|date:'Y-m-d' }}&time={{ value }}"
+       class="bg-white border border-gray-200 rounded-lg py-3 px-4 text-center hover:border-indigo-400 hover:bg-indigo-50 transition-colors">
+        <span class="text-sm font-medium text-gray-800">{{ display }}</span>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="bg-gray-50 rounded-lg p-8 text-center">
+    <p class="text-gray-500">No available times for this date.</p>
+</div>
+{% endif %}

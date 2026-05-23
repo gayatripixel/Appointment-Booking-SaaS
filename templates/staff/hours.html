@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Working Hours - {{ staff.display_name }} - AppointHub{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <a href="{% url 'staff:list' shop.slug %}" class="text-indigo-600 hover:text-indigo-800">&larr; Back to Staff</a>
+</div>
+
+<div class="max-w-2xl">
+    <div class="flex items-center space-x-4 mb-6">
+        {% if staff.photo %}
+        <img src="{{ staff.photo.url }}" alt="{{ staff.display_name }}" class="w-12 h-12 rounded-full object-cover">
+        {% else %}
+        <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
+            <span class="text-gray-500 font-medium text-lg">{{ staff.display_name|slice:":1" }}</span>
+        </div>
+        {% endif %}
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800">Working Hours</h1>
+            <p class="text-gray-500">{{ staff.display_name }}</p>
+        </div>
+    </div>
+
+    <form method="post" class="bg-white shadow-sm rounded-lg p-6">
+        {% csrf_token %}
+        {{ formset.management_form }}
+
+        {% if formset.non_form_errors %}
+        <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
+            {% for error in formset.non_form_errors %}
+            <p class="text-red-600 text-sm">{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="space-y-4">
+            {% for form in formset %}
+            <div class="flex items-center space-x-4 p-4 border border-gray-200 rounded-md">
+                {{ form.id }}
+                {{ form.day_of_week.as_hidden }}
+
+                <div class="w-28 font-medium text-gray-700">
+                    {{ form.instance.get_day_of_week_display }}
+                </div>
+
+                <label class="flex items-center">
+                    <input type="checkbox" name="{{ form.is_day_off.name }}"
+                           id="{{ form.is_day_off.id_for_label }}"
+                           {% if form.is_day_off.value %}checked{% endif %}
+                           class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 day-off-toggle">
+                    <span class="ml-2 text-sm text-gray-600">Day off</span>
+                </label>
+
+                <div class="flex items-center space-x-2 time-inputs">
+                    <input type="time" name="{{ form.start_time.name }}"
+                           value="{{ form.start_time.value|default:'' }}"
+                           class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                    <span class="text-gray-500">to</span>
+                    <input type="time" name="{{ form.end_time.name }}"
+                           value="{{ form.end_time.value|default:'' }}"
+                           class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-6 flex justify-end space-x-3">
+            <a href="{% url 'staff:list' shop.slug %}"
+               class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                Cancel
+            </a>
+            <button type="submit"
+                    class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                Save Hours
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.querySelectorAll('.day-off-toggle').forEach(checkbox => {
+    const row = checkbox.closest('.flex.items-center');
+    const timeInputs = row.querySelector('.time-inputs');
+
+    function toggleTimeInputs() {
+        if (checkbox.checked) {
+            timeInputs.style.opacity = '0.5';
+            timeInputs.querySelectorAll('input').forEach(input => input.disabled = true);
+        } else {
+            timeInputs.style.opacity = '1';
+            timeInputs.querySelectorAll('input').forEach(input => input.disabled = false);
+        }
+    }
+
+    toggleTimeInputs();
+    checkbox.addEventListener('change', toggleTimeInputs);
+});
+</script>
+{% endblock %}

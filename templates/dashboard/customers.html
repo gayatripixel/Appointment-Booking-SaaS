@@ -1,0 +1,329 @@
+{% extends 'base.html' %}
+
+{% block title %}Customers - AppointHub{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-blue-600 mb-1">Customers</h1>
+            <p class="text-black/70">Manage your customer relationships</p>
+        </div>
+        <div class="mt-4 sm:mt-0 flex space-x-3">
+            <button class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm text-white rounded-lg hover:bg-white/20 transition-all border border-white/20 font-medium">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                </svg>
+                Export
+            </button>
+           
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+<!-- Stats Cards -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+
+    <!-- Total Customers -->
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet-200 via-purple-200 to-fuchsia-200 p-5 border border-white/50 shadow-lg">
+
+        <div class="absolute top-0 right-0 w-24 h-24 bg-white/40 rounded-full blur-2xl"></div>
+
+        <div class="flex items-center justify-between relative z-10">
+
+            <div>
+
+                <p class="text-purple-700 text-sm font-medium">
+                    Total Customers
+                </p>
+
+                <h3 class="text-3xl font-bold text-gray-800 mt-1">
+                    {{ stats.total_customers }}
+                </h3>
+
+            </div>
+
+            <div class="w-14 h-14 rounded-2xl bg-white/60 flex items-center justify-center shadow">
+
+                <svg class="w-7 h-7 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2">
+                    </path>
+
+                </svg>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- VIP -->
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-pink-100 via-rose-100 to-fuchsia-100 p-5 border border-white/50 shadow-lg">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+
+                <p class="text-rose-700 text-sm font-medium">
+                    VIP Customers
+                </p>
+
+                <h3 class="text-3xl font-bold text-gray-800 mt-1">
+                    {{ stats.vip_customers }}
+                </h3>
+
+            </div>
+
+            <div class="w-14 h-14 rounded-2xl bg-white/60 flex items-center justify-center shadow">
+
+                <svg class="w-7 h-7 text-rose-700" fill="currentColor" viewBox="0 0 24 24">
+
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+
+                </svg>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- New -->
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-100 via-green-100 to-lime-100 p-5 border border-white/50 shadow-lg">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+
+                <p class="text-green-700 text-sm font-medium">
+                    New This Month
+                </p>
+
+                <h3 class="text-3xl font-bold text-gray-800 mt-1">
+                    {{ stats.new_this_month }}
+                </h3>
+
+            </div>
+
+            <div class="w-14 h-14 rounded-2xl bg-white/60 flex items-center justify-center shadow">
+
+                <svg class="w-7 h-7 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 4v16m8-8H4">
+                    </path>
+
+                </svg>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Revenue -->
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-sky-100 via-cyan-100 to-blue-100 p-5 border border-white/50 shadow-lg">
+
+        <div class="flex items-center justify-between">
+
+            <div>
+
+                <p class="text-blue-700 text-sm font-medium">
+                    Total Revenue
+                </p>
+
+                <h3 class="text-3xl font-bold text-gray-800 mt-1">
+                    ₹{{ stats.total_revenue|floatformat:0 }}
+                </h3>
+
+            </div>
+
+            <div class="w-14 h-14 rounded-2xl bg-white/60 flex items-center justify-center shadow">
+              <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                   d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2
+                   3 .895 3 2-1.343 2-3 2m0-8V6m0 2v8m0 0v2">
+                 </path>
+              </svg>
+          </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <!-- Filters -->
+    <form method="GET" class="glass-card rounded-xl p-4 mb-6">
+    <div class="glass-card rounded-xl p-4 mb-6">
+        <div class="flex flex-col sm:flex-row gap-4">
+            <div class="flex-1">
+<div class="relative flex-1">
+
+    <input
+        type="text"
+        name="search"
+        value="{{ search }}"
+        placeholder="Search customers..."
+        class="w-full pl-5 pr-32 py-3 rounded-2xl border border-purple-100 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
+    >
+
+    <input
+      type="hidden"
+      name="shop"
+      value="{{ selected_shop_id }}"
+    >
+
+    <button
+        type="submit"
+        class="absolute right-2 top-1/2 -translate-y-1/2 px-5 py-1.5 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-medium shadow hover:scale-105 transition"
+    >
+        Search
+    </button>
+
+</div>
+            </div>
+<div class="w-64">
+
+<select
+    name="shop"
+    onchange="this.form.submit()"
+    class="w-full px-4 py-3 rounded-2xl border border-purple-100 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
+>
+    
+    <option value="all"
+        {% if selected_shop_id == "all" %}
+            selected
+        {% endif %}
+    >
+        All Shops
+    </option>
+
+    {% for shop in shops %}
+
+        <option
+            value="{{ shop.id }}"
+            {% if selected_shop_id == shop.id|stringformat:"s" %}
+                selected
+            {% endif %}
+        >
+            {{ shop.name }}
+        </option>
+
+    {% endfor %}
+
+</select>
+</div>
+
+        </div>
+   </form>
+
+    <!-- Customers Grid -->
+    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {% for customer in customers %}
+        <div class="bg-white rounded-3xl border border-purple-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1" hover:shadow-lg transition-shadow">
+            <div class="p-5">
+                <!-- Header -->
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-600 to-rose-500 flex items-center justify-center text-white text-sm font-bold">
+                            {{ customer.avatar_initials }}
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-lg font-bold text-gray-800 break-all">{{ customer.name }}</h3>
+                            <span class="px-2 py-0.5 text-xs font-medium rounded-full {{ customer.status_class }}">
+                                {{ customer.status|upper }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact -->
+                <div class="space-y-1.5 mb-4 text-sm">
+                    <div class="flex items-center text-gray-600 truncate">
+                        <svg class="w-4 h-4 mr-2 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="truncate">{{ customer.email }}</span>
+                    </div>
+                    <div class="flex items-center text-gray-600">
+                        <svg class="w-4 h-4 mr-2 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                        </svg>
+                        {{ customer.phone }}
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                    <div class="text-center p-2 bg-gray-50 rounded-lg">
+                        <p class="text-xs text-gray-500">Bookings</p>
+                        <p class="text-sm font-bold text-gray-800">{{ customer.total_bookings }}</p>
+                    </div>
+                    <div class="text-center p-2 bg-gray-50 rounded-lg">
+                        <p class="text-xs text-gray-500">Total Spent</p>
+                        <p class="text-sm font-bold text-gray-800">₹{{ customer.total_spent }}</p>
+                    </div>
+                </div>
+
+                <!-- Extra Info -->
+                <div class="space-y-1.5 text-xs text-gray-500 mb-4">
+                    <div class="flex justify-between">
+                        <span>Favorite Service:</span>
+                        <span class="font-medium text-gray-700">{{ customer.favorite_service }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Last Visit:</span>
+                        <span class="font-medium text-gray-700">{{ customer.last_visit|date:"M d, Y" }}</span>
+                    </div>
+                    <!-- <div class="flex justify-between">
+                        <span>Member Since:</span>
+                        <span class="font-medium text-gray-700">{{ customer.joined|date:"M Y" }}</span>
+                    </div> -->
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+                    <div class="flex items-center space-x-1">
+                        <button class="p-2 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors" title="View">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                        </button>
+                        <button class="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                        </button>
+                        <button class="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="Book Appointment">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <button class="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors" title="Delete">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-6 flex items-center justify-between">
+        <p class="text-sm text-white/70">Showing <span class="font-medium text-white">1-{{ customers|length }}</span> of <span class="font-medium text-white">{{ customers|length }}</span> customers</p>
+        <div class="flex items-center space-x-2">
+            <button class="px-4 py-2 text-sm bg-white/10 backdrop-blur-sm text-white rounded-lg hover:bg-white/20 transition-colors disabled:opacity-50 border border-white/20" disabled>Previous</button>
+            <button class="px-4 py-2 text-sm bg-white text-purple-600 rounded-lg font-medium">1</button>
+            <button class="px-4 py-2 text-sm bg-white/10 backdrop-blur-sm text-white rounded-lg hover:bg-white/20 transition-colors border border-white/20">Next</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

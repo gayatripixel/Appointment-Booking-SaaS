@@ -1,0 +1,25 @@
+{% extends 'emails/base.html' %}
+
+{% block title %}Booking Cancelled - AppointHub{% endblock %}
+
+{% block content %}
+<h1>Booking Cancelled</h1>
+<p>Hi {{ booking.customer.get_short_name }},</p>
+
+{% if cancelled_by == 'customer' %}
+<p>Your appointment has been successfully cancelled as requested.</p>
+{% else %}
+<p>Unfortunately, your appointment has been cancelled by the service provider.</p>
+{% endif %}
+
+<div style="background-color: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0;">
+    <p><strong>Service:</strong> {{ booking.service.name }}</p>
+    <p><strong>Original Date:</strong> {{ booking.date|date:"l, F j, Y" }}</p>
+    <p><strong>Original Time:</strong> {{ booking.start_time|time:"g:i A" }}</p>
+    <p><strong>Location:</strong> {{ booking.shop.name }}</p>
+</div>
+
+<p>Would you like to book a new appointment? Visit our website to find available times that work for you.</p>
+
+<p>Best regards,<br>The AppointHub Team</p>
+{% endblock %}

@@ -1,0 +1,31 @@
+# Django
+Django>=5.0,<6.0
+
+# Database
+psycopg2-binary>=2.9.9
+
+# Redis & Celery
+redis>=5.0.0
+celery>=5.3.0
+django-celery-beat>=2.5.0
+
+# Email
+resend>=2.0.0
+
+# Environment
+python-dotenv>=1.0.0
+
+# Forms & Validation
+django-crispy-forms>=2.1
+crispy-tailwind>=1.0.0
+
+# Image handling
+Pillow>=10.0.0
+
+# Security
+django-cors-headers>=4.3.0
+django-axes>=6.4.0
+django-ratelimit>=4.1.0
+
+# Utilities
+python-dateutil>=2.8.2

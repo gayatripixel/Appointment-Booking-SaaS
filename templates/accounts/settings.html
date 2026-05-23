@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings - AppointHub{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Page Header -->
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold text-white mb-2">Settings</h1>
+        <p class="text-white/70">Manage your account preferences and security</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <!-- Sidebar Navigation -->
+        <div class="lg:col-span-1">
+            <nav class="glass-card rounded-xl p-2 space-y-1" x-data="{ activeTab: 'notifications' }">
+                <button @click="activeTab = 'notifications'" 
+                        :class="activeTab === 'notifications' ? 'bg-purple-50 text-purple-700' : 'text-gray-600 hover:bg-gray-50'"
+                        class="w-full flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                    </svg>
+                    Notifications
+                </button>
+                <button @click="activeTab = 'privacy'" 
+                        :class="activeTab === 'privacy' ? 'bg-purple-50 text-purple-700' : 'text-gray-600 hover:bg-gray-50'"
+                        class="w-full flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                    Privacy
+                </button>
+                <button @click="activeTab = 'password'" 
+                        :class="activeTab === 'password' ? 'bg-purple-50 text-purple-700' : 'text-gray-600 hover:bg-gray-50'"
+                        class="w-full flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                    </svg>
+                    Password
+                </button>
+                <button @click="activeTab = 'appearance'" 
+                        :class="activeTab === 'appearance' ? 'bg-purple-50 text-purple-700' : 'text-gray-600 hover:bg-gray-50'"
+                        class="w-full flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
+                    </svg>
+                    Appearance
+                </button>
+                <button @click="activeTab = 'danger'" 
+                        :class="activeTab === 'danger' ? 'bg-rose-50 text-rose-700' : 'text-gray-600 hover:bg-gray-50'"
+                        class="w-full flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                    Danger Zone
+                </button>
+            </nav>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="lg:col-span-3" x-data="{ activeTab: 'notifications' }">
+            <!-- Notifications Settings -->
+            <div x-show="activeTab === 'notifications'" x-cloak>
+                <form method="POST" class="glass-card rounded-xl p-6">
+                    {% csrf_token %}
+                    <input type="hidden" name="section" value="notifications">
+                    
+                    <h2 class="text-lg font-semibold text-gray-800 mb-1">Notification Preferences</h2>
+                    <p class="text-sm text-gray-500 mb-6">Choose how you want to be notified</p>
+                    
+                    <div class="space-y-4">
+                        <label class="flex items-center justify-between p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center mr-4">
+                                    <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-800">Email Notifications</p>
+                                    <p class="text-xs text-gray-500">Receive updates via email</p>
+                                </div>
+                            </div>
+                            <input type="checkbox" name="email_notifications" {% if email_notifications %}checked{% endif %}
+                                   class="w-5 h-5 text-purple-600 rounded focus:ring-purple-500">
+                        </label>
+                        
+                        <label class="flex items-center justify-between p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center mr-4">
+                                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-800">SMS Notifications</p>
+                                    <p class="text-xs text-gray-500">Receive text messages for important updates</p>
+                                </div>
+                            </div>
+                            <input type="checkbox" name="sms_notifications" {% if sms_notifications %}checked{% endif %}
+                                   class="w-5 h-5 text-purple-600 rounded focus:ring-purple-500">
+                        </label>
+                        
+                        <label class="flex items-center justify-between p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center mr-4">
+                                    <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-800">Booking Reminders</p>
+                                    <p class="text-xs text-gray-500">Get reminded before appointments</p>
+                                </div>
+                            </div>
+                            <input type="checkbox" name="booking_reminders" {% if booking_reminders %}checked{% endif %}
+                                   class="w-5 h-5 text-purple-600 rounded focus:ring-purple-500">
+                        </label>
+                        
+                        <label class="flex items-center justify-between p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-lg bg-rose-100 flex items-center justify-center mr-4">
+                                    <svg class="w-5 h-5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-800">Marketing Emails</p>
+                                    <p class="text-xs text-gray-500">Receive promotions and special offers</p>
+                                </div>
+                            </div>
+                            <input type="checkbox" name="marketing_emails" {% if marketing_emails %}checked{% endif %}
+                                   class="w-5 h-5 text-purple-600 rounded focus:ring-purple-500">
+                        </label>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-end">
+                        <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-rose-500 text-white rounded-lg hover:from-purple-700 hover:to-rose-600 transition-all font-medium shadow-lg shadow-purple-500/25">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Privacy Settings -->
+            <div x-show="activeTab === 'privacy'" x-cloak>
+                <form method="POST" class="glass-card rounded-xl p-6">
+                    {% csrf_token %}
+                    <input type="hidden" name="section" value="privacy">
+                    
+                    <h2 class="text-lg font-semibold text-gray-800 mb-1">Privacy Settings</h2>
+                    <p class="text-sm text-gray-500 mb-6">Control your privacy and visibility</p>
+                    
+                    <div class="space-y-4">
+                        <label class="flex items-center justify-between p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-4">
+                                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-800">Profile Visibility</p>
+                                    <p class="text-xs text-gray-500">Allow others to see your profile</p>
+                                </div>
+                            </div>
+                            <input type="checkbox" name="profile_visible" {% if profile_visible %}checked{% endif %}
+                                   class="w-5 h-5 text-purple-600 rounded focus:ring-purple-500">
+                        </label>
+                        
+                        <label class="flex items-center justify-between p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center mr-4">
+                                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M13 12a1 1 0 11-2 0 1 1 0 012 0z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-800">Online Status</p>
+                                    <p class="text-xs text-gray-500">Show when you're online</p>
+                                </div>
+                            </div>
+                            <input type="checkbox" name="show_online_status" {% if show_online_status %}checked{% endif %}
+                                   class="w-5 h-5 text-purple-600 rounded focus:ring-purple-500">
+                        </label>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-end">
+                        <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-rose-500 text-white rounded-lg hover:from-purple-700 hover:to-rose-600 transition-all font-medium shadow-lg shadow-purple-500/25">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Password Settings -->
+            <div x-show="activeTab === 'password'" x-cloak>
+                <form method="POST" class="glass-card rounded-xl p-6">
+                    {% csrf_token %}
+                    <input type="hidden" name="section" value="password">
+                    
+                    <h2 class="text-lg font-semibold text-gray-800 mb-1">Change Password</h2>
+                    <p class="text-sm text-gray-500 mb-6">Update your password to keep your account secure</p>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1.5">Current Password</label>
+                            <input type="password" name="current_password" required
+                                   class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                                   placeholder="Enter current password">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1.5">New Password</label>
+                            <input type="password" name="new_password" required minlength="8"
+                                   class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                                   placeholder="Enter new password">
+                            <p class="mt-1 text-xs text-gray-500">Must be at least 8 characters</p>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1.5">Confirm New Password</label>
+                            <input type="password" name="confirm_password" required
+                                   class="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                                   placeholder="Confirm new password">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-end">
+                        <button type="submit" class="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-rose-500 text-white rounded-lg hover:from-purple-700 hover:to-rose-600 transition-all font-medium shadow-lg shadow-purple-500/25">
+                            Update Password
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Appearance Settings -->
+            <div x-show="activeTab === 'appearance'" x-cloak>
+                <div class="glass-card rounded-xl p-6">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-1">Appearance</h2>
+                    <p class="text-sm text-gray-500 mb-6">Customize the look and feel</p>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-3">Theme</label>
+                            <div class="grid grid-cols-3 gap-3">
+                                <button type="button" class="p-4 rounded-xl border-2 border-purple-500 bg-white text-center">
+                                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-rose-500 mx-auto mb-2"></div>
+                                    <span class="text-sm font-medium text-gray-800">Light</span>
+                                </button>
+                                <button type="button" class="p-4 rounded-xl border-2 border-gray-200 bg-gray-800 text-center hover:border-gray-400 transition-colors">
+                                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-purple-400 to-rose-400 mx-auto mb-2"></div>
+                                    <span class="text-sm font-medium text-white">Dark</span>
+                                </button>
+                                <button type="button" class="p-4 rounded-xl border-2 border-gray-200 bg-gray-100 text-center hover:border-gray-400 transition-colors">
+                                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-gray-400 to-gray-600 mx-auto mb-2"></div>
+                                    <span class="text-sm font-medium text-gray-800">System</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-4 border-t border-gray-100">
+                            <p class="text-sm text-gray-500 text-center">More appearance options coming soon!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div x-show="activeTab === 'danger'" x-cloak>
+                <div class="glass-card rounded-xl p-6 border-2 border-rose-200">
+                    <h2 class="text-lg font-semibold text-rose-700 mb-1">Danger Zone</h2>
+                    <p class="text-sm text-gray-500 mb-6">Irreversible and destructive actions</p>
+                    
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-lg bg-rose-50 border border-rose-200">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-800">Delete Account</p>
+                                    <p class="text-xs text-gray-500 mt-1">Permanently delete your account and all data. This action cannot be undone.</p>
+                                </div>
+                                <button type="button" class="px-4 py-2 bg-rose-600 text-white text-sm rounded-lg hover:bg-rose-700 transition-colors font-medium">
+                                    Delete Account
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 rounded-lg bg-amber-50 border border-amber-200">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-800">Export Data</p>
+                                    <p class="text-xs text-gray-500 mt-1">Download all your data in a portable format.</p>
+                                </div>
+                                <button type="button" class="px-4 py-2 bg-amber-600 text-white text-sm rounded-lg hover:bg-amber-700 transition-colors font-medium">
+                                    Export Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Sync the sidebar navigation with the content tabs
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('settingsTabs', () => ({
+            activeTab: 'notifications'
+        }))
+    })
+</script>
+{% endblock %}

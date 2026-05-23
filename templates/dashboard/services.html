@@ -1,0 +1,388 @@
+{% extends 'base.html' %} {% block title %}Services - AppointHub{% endblock %}
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+  <!-- Page Header -->
+  <div
+    class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6"
+  >
+    <div>
+      <h1 class="text-2xl font-bold text-blue-600 mb-1">Services</h1>
+      <p class="text-black/70">Manage your service offerings and pricing</p>
+    </div>
+    <div class="mt-4 sm:mt-0 flex space-x-3">
+      <button
+        class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm text-white rounded-lg hover:bg-white/20 transition-all border border-white/20 font-medium"
+      >
+        <svg
+          class="w-5 h-5 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+          ></path>
+        </svg>
+        Add Category
+      </button>
+      <!-- <a href="{% url 'dashboard:service_add' %}"
+      class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-600 to-rose-500 text-white rounded-lg hover:from-purple-700 hover:to-rose-600 transition-all shadow-lg shadow-purple-500/25 font-medium">
+        <svg
+          class="w-5 h-5 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 4v16m8-8H4"
+          ></path>
+        </svg>
+        Add Service
+      </a> -->
+    </div>
+  </div>
+
+<!-- Stats Cards -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+
+    <!-- Total Services -->
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet-200 via-purple-200 to-fuchsia-200 p-5 border border-white/50 shadow-lg">
+
+        <div class="absolute top-0 right-0 w-24 h-24 bg-white/40 rounded-full blur-2xl"></div>
+
+        <div class="flex items-center justify-between relative z-10">
+
+            <div>
+
+                <p class="text-purple-700 text-sm font-medium">
+                    Total Services
+                </p>
+
+                <h3 class="text-3xl font-bold text-gray-800 mt-1">
+                    {{ stats.total_services }}
+                </h3>
+
+            </div>
+
+            <div class="w-14 h-14 rounded-2xl bg-white/60 flex items-center justify-center backdrop-blur-md shadow">
+
+                <svg
+                    class="w-7 h-7 text-purple-700"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                    ></path>
+                </svg>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Active -->
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-100 via-green-100 to-lime-100 p-5 border border-white/50 shadow-lg">
+
+        <div class="absolute top-0 right-0 w-24 h-24 bg-white/40 rounded-full blur-2xl"></div>
+
+        <div class="flex items-center justify-between relative z-10">
+
+            <div>
+
+                <p class="text-green-700 text-sm font-medium">
+                    Active
+                </p>
+
+                <h3 class="text-3xl font-bold text-gray-800 mt-1">
+                    {{ stats.active_services }}
+                </h3>
+
+            </div>
+
+            <div class="w-14 h-14 rounded-2xl bg-white/60 flex items-center justify-center backdrop-blur-md shadow">
+
+                <svg
+                    class="w-7 h-7 text-green-700"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                    ></path>
+                </svg>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Categories -->
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-sky-100 via-cyan-100 to-blue-100 p-5 border border-white/50 shadow-lg">
+
+        <div class="absolute top-0 right-0 w-24 h-24 bg-white/40 rounded-full blur-2xl"></div>
+
+        <div class="flex items-center justify-between relative z-10">
+
+            <div>
+
+                <p class="text-blue-700 text-sm font-medium">
+                    Categories
+                </p>
+
+                <h3 class="text-3xl font-bold text-gray-800 mt-1">
+                    {{ stats.categories }}
+                </h3>
+
+            </div>
+
+            <div class="w-14 h-14 rounded-2xl bg-white/60 flex items-center justify-center backdrop-blur-md shadow">
+
+                <svg
+                    class="w-7 h-7 text-blue-700"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                    ></path>
+                </svg>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Total Bookings -->
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-rose-100 via-pink-100 to-fuchsia-100 p-5 border border-white/50 shadow-lg">
+
+        <div class="absolute top-0 right-0 w-24 h-24 bg-white/40 rounded-full blur-2xl"></div>
+
+        <div class="flex items-center justify-between relative z-10">
+
+            <div>
+
+                <p class="text-rose-700 text-sm font-medium">
+                    Total Bookings
+                </p>
+
+                <h3 class="text-3xl font-bold text-gray-800 mt-1">
+                    {{ stats.total_bookings }}
+                </h3>
+
+            </div>
+
+            <div class="w-14 h-14 rounded-2xl bg-white/60 flex items-center justify-center backdrop-blur-md shadow">
+
+                <svg
+                    class="w-7 h-7 text-rose-700"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    ></path>
+                </svg>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Categories -->
+
+<div class="mt-8">
+
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">
+        Categories
+    </h2>
+
+    <div class="flex flex-wrap gap-3">
+
+        <div class="flex flex-wrap gap-3 mt-4">
+
+           <button class="px-5 py-2.5 rounded-xl bg-purple-600 text-white text-sm font-medium shadow">
+             All Services
+           </button>
+
+           {% for category in categories %}
+
+          <button class="px-5 py-2.5 rounded-xl bg-white border border-gray-200 text-gray-700 text-sm font-medium hover:border-purple-500 hover:text-purple-600 transition">
+
+            {{ category }}
+
+          </button>
+
+      {% endfor %}
+    </div>
+
+  </div>
+
+</div>
+
+
+<div class="mt-6 mb-2 flex justify-center">
+  <form method="GET" class="w-full md:w-[450px] flex items-center bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden focus-within:ring-2 focus-within:ring-purple-500">
+
+    <!-- Input Wrapper -->
+    <div class="relative w-full">
+
+      <input
+        type="text"
+        id="searchInput"
+        name="search"
+        value="{{ request.GET.search }}"
+        placeholder="Search services..."
+        class="w-full px-5 py-3 pr-12 outline-none text-gray-700"
+      />
+
+      <!-- Clear Button -->
+      {% if request.GET.search %}
+      <a href="?" 
+         class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-red-500 text-lg">
+        ✕
+      </a>
+      {% endif %}
+
+    </div>
+
+    <!-- Search Button -->
+    <button
+      type="submit"
+      class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 flex items-center justify-center transition"
+    >
+      🔍
+    </button>
+
+  </form>
+</div>
+
+ 
+  <!-- Services Grid -->
+
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-8">
+    {% for service in services %}
+
+    <!-- <div class="bg-white rounded-2xl p-5 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border border-gray-100"> -->
+    <div
+      class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 hover:shadow-lg transition"
+    >
+      <!-- TOP -->
+      <div class="flex items-start justify-between">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900">
+            {{ service.name }}
+          </h3>
+
+          <p class="text-sm text-purple-500 mt-1">
+            {{ service.category.name }}
+          </p>
+        </div>
+
+        {% if service.is_active %}
+
+        <span
+          class="px-3 py-1 rounded-full text-xs bg-green-100 text-green-700"
+        >
+          Active
+        </span>
+
+        {% else %}
+
+        <span class="px-3 py-1 rounded-full text-xs bg-red-100 text-red-700">
+          Inactive
+        </span>
+
+        {% endif %}
+      </div>
+
+      <!-- STATS -->
+      <div class="grid grid-cols-3 gap-4 mt-6">
+        <div class="bg-gray-50 rounded-xl p-3 text-center">
+          <p class="text-xs text-gray-400">Duration</p>
+
+          <p class="font-semibold mt-1 text-gray-800">
+            {{ service.duration }} min
+          </p>
+        </div>
+
+        <div class="bg-gray-50 rounded-xl p-3 text-center">
+          <p class="text-xs text-gray-400">Price</p>
+
+          <p class="font-semibold mt-1 text-gray-800">₹{{ service.price }}</p>
+        </div>
+
+        <div class="bg-gray-50 rounded-xl p-3 text-center">
+          <p class="text-xs text-gray-400">Bookings</p>
+
+          <p class="font-semibold mt-1 text-gray-800">
+              <!-- {{ service.booking_set.all|length }} -->
+                <!-- Service: {{ service.name }} <br> -->
+               {{ service.bookings.all.count }}
+          </p>
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="flex items-center justify-between mt-6 pt-4 border-t">
+        <div class="flex gap-2">
+          <a
+            href="{% url 'dashboard:service_edit' service.id %}"
+            class="p-2 rounded-lg hover:bg-purple-100 text-gray-500 hover:text-purple-600 transition"
+          >
+            ✏️
+          </a>
+
+          <button
+            class="p-2 rounded-lg hover:bg-red-100 text-gray-500 hover:text-red-600 transition"
+          >
+            🗑️
+          </button>
+        </div>
+
+        <label class="inline-flex items-center cursor-pointer">
+          <input
+             type="checkbox"
+             class="sr-only peer"
+             {% if service.is_active %}checked{% endif %}
+           />
+
+          <div
+            class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-purple-600 relative after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-5 after:w-5 after:rounded-full after:transition-all peer-checked:after:translate-x-5"
+          ></div>
+        </label>
+      </div>
+    </div>
+
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

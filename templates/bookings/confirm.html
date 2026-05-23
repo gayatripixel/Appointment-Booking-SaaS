@@ -1,0 +1,250 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Confirm Booking - {{ shop.name }} -AppointHub
+{% endblock %} 
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+  <div class="mb-6">
+    <a
+      href="{% url 'bookings:datetime' shop.slug service.pk %}?{% if staff %}staff={{ staff.pk }}&{% endif %}date={{ booking_date|date:'Y-m-d' }}"
+      class="text-indigo-600 hover:text-indigo-800"
+      >&larr; Back to Time Selection</a
+    >
+  </div>
+
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Confirm Your Booking</h1>
+    <p class="text-gray-500">Review your appointment details</p>
+  </div>
+
+  <!-- Progress indicator -->
+  <div class="flex items-center mb-8">
+    <div class="flex items-center">
+      <div
+        class="w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center text-sm font-medium"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 13l4 4L19 7"
+          ></path>
+        </svg>
+      </div>
+      <span class="ml-2 text-sm font-medium text-indigo-600">Service</span>
+    </div>
+    <div class="flex-1 h-0.5 bg-indigo-600 mx-4"></div>
+    <div class="flex items-center">
+      <div
+        class="w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center text-sm font-medium"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 13l4 4L19 7"
+          ></path>
+        </svg>
+      </div>
+      <span class="ml-2 text-sm font-medium text-indigo-600">Staff</span>
+    </div>
+    <div class="flex-1 h-0.5 bg-indigo-600 mx-4"></div>
+    <div class="flex items-center">
+      <div
+        class="w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center text-sm font-medium"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 13l4 4L19 7"
+          ></path>
+        </svg>
+      </div>
+      <span class="ml-2 text-sm font-medium text-indigo-600">Date & Time</span>
+    </div>
+    <div class="flex-1 h-0.5 bg-indigo-600 mx-4"></div>
+    <div class="flex items-center">
+      <div
+        class="w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center text-sm font-medium"
+      >
+        4
+      </div>
+      <span class="ml-2 text-sm font-medium text-indigo-600">Confirm</span>
+    </div>
+  </div>
+
+  <!-- Booking summary -->
+  <div class="bg-white shadow-sm rounded-lg p-6 mb-6">
+    <h3 class="font-medium text-gray-800 mb-4">Appointment Details</h3>
+
+    <div class="space-y-3">
+      <div class="flex justify-between">
+        <span class="text-gray-500">Service</span>
+        <span class="font-medium text-gray-800">{{ service.name }}</span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-gray-500">Staff</span>
+        <span class="font-medium text-gray-800">
+            {% if staff %}
+              {{ staff.display_name }}
+            {% else %}
+              Any Available
+              {% endif %}
+        </span>
+      </div>
+      <div class="flex justify-between">
+        <span class="text-gray-500">Date</span>
+        <span class="font-medium text-gray-800"
+          >{{ booking_date|date:'l, F j, Y' }}</span
+        >
+      </div>
+      <div class="flex justify-between">
+        <span class="text-gray-500">Time</span>
+        <span class="font-medium text-gray-800"
+          >{{ booking_time|time:'g:i A' }} - {{ end_time|time:'g:i A' }}</span
+        >
+      </div>
+      <div class="flex justify-between">
+        <span class="text-gray-500">Duration</span>
+        <span class="font-medium text-gray-800"
+          >{{ service.duration }} minutes</span
+        >
+      </div>
+      <hr class="my-3" />
+      <div class="flex justify-between">
+        <span class="text-gray-800 font-medium">Total</span>
+        <span class="text-lg font-semibold text-gray-800"
+          >₹{{ service.price }}</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Booking form -->
+  <form method="post" id="booking-form" class="bg-white shadow-sm rounded-lg p-6">
+    {% csrf_token %} 
+    <input type="hidden" name="payment_id" id="payment_id">
+    {% if not user.is_authenticated %}
+    <h3 class="font-medium text-gray-800 mb-4">Your Information</h3>
+
+    <div class="space-y-4 mb-6">
+      <div>
+        <label
+          for="guest_name"
+          class="block text-sm font-medium text-gray-700 mb-1"
+          >Name *</label
+        >
+        <input
+          type="text"
+          name="guest_name"
+          id="guest_name"
+          required
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+        />
+      </div>
+      <div>
+        <label
+          for="guest_email"
+          class="block text-sm font-medium text-gray-700 mb-1"
+          >Email *</label
+        >
+        <input
+          type="email"
+          name="guest_email"
+          id="guest_email"
+          required
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+        />
+      </div>
+      <div>
+        <label
+          for="guest_phone"
+          class="block text-sm font-medium text-gray-700 mb-1"
+          >Phone</label
+        >
+        <input
+          type="tel"
+          name="guest_phone"
+          id="guest_phone"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+        />
+      </div>
+    </div>
+    {% else %}
+    <div class="bg-gray-50 rounded-lg p-4 mb-6">
+      <p class="text-sm text-gray-600">
+        Booking as <span class="font-medium">{{ user.email }}</span>
+      </p>
+    </div>
+    {% endif %}
+
+    <div class="mb-6">
+      <label for="notes" class="block text-sm font-medium text-gray-700 mb-1"
+        >Special Requests (optional)</label
+      >
+      <textarea
+        name="notes"
+        id="notes"
+        rows="3"
+        placeholder="Any special requests or notes for your appointment?"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+      ></textarea>
+    </div>
+
+    <a href="{% url 'bookings:create_booking_checkout' shop.slug service.pk %}?staff={{ staff.pk }}&date={{ booking_date|date:'Y-m-d' }}&time={{ booking_time|time:'H:i' }}"
+       class="w-full block text-center bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-semibold">
+
+        Pay & Confirm Booking
+
+    </a>
+
+<script>
+const stripe = Stripe("{{ stripe_key }}");
+
+document.getElementById("payBtn").addEventListener("click", async () => {
+
+    const {error} = await stripe.confirmCardPayment(
+        "{{ client_secret }}",
+        {
+            payment_method: {
+                card: {
+                    // ⚠️ later we will add Stripe Elements UI
+                }
+            }
+        }
+    );
+
+    if (error) {
+        alert(error.message);
+    } else {
+        alert("Payment Successful!");
+        window.location.href = "/success/";
+    }
+});
+</script>
+
+</form>
+</div>
+
+{% endblock %}

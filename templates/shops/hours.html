@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Business Hours - {{ shop.name }} - AppointHub{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+        <a href="{% url 'shops:dashboard' shop.slug %}" class="text-indigo-600 hover:text-indigo-800">&larr; Back to Dashboard</a>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg p-8">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Business Hours</h1>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ formset.management_form }}
+
+            <div class="space-y-4">
+                {% for form in formset %}
+                <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                    {{ form.id }}
+                    {{ form.day_of_week.as_hidden }}
+
+                    <div class="w-28 font-medium text-gray-700">
+                        {{ form.instance.get_day_of_week_display }}
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="{{ form.is_closed.name }}"
+                                   {% if form.is_closed.value %}checked{% endif %}
+                                   class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                   onchange="toggleHours(this, '{{ forloop.counter0 }}')">
+                            <span class="ml-2 text-sm text-gray-600">Closed</span>
+                        </label>
+                    </div>
+
+                    <div class="flex-1 flex items-center space-x-2 hours-inputs-{{ forloop.counter0 }}"
+                         {% if form.is_closed.value %}style="display: none;"{% endif %}>
+                        <input type="time" name="{{ form.open_time.name }}"
+                               value="{{ form.open_time.value|default:'' }}"
+                               class="px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
+                        <span class="text-gray-500">to</span>
+                        <input type="time" name="{{ form.close_time.name }}"
+                               value="{{ form.close_time.value|default:'' }}"
+                               class="px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="mt-6 flex space-x-4">
+                <button type="submit"
+                        class="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    Save Hours
+                </button>
+                <a href="{% url 'shops:dashboard' shop.slug %}"
+                   class="flex-1 text-center bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function toggleHours(checkbox, index) {
+    const inputs = document.querySelector('.hours-inputs-' + index);
+    if (checkbox.checked) {
+        inputs.style.display = 'none';
+    } else {
+        inputs.style.display = 'flex';
+    }
+}
+</script>
+{% endblock %}
+
+

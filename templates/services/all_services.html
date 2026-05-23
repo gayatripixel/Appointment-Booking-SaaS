@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="max-w-7xl mx-auto px-4 py-6">
+
+    <h1 class="text-3xl font-bold text-purple-600 mb-6">
+        All Services
+    </h1>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        {% for service in services %}
+
+        <div class="glass-card rounded-2xl p-5">
+
+            <div class="flex items-center justify-between mb-3">
+
+                <div>
+                    <h2 class="text-lg font-bold text-gray-800">
+                        {{ service.name }}
+                    </h2>
+
+                    <p class="text-sm text-gray-500">
+                        {{ service.shop.name }}
+                    </p>
+                </div>
+
+                <span class="px-3 py-1 rounded-full text-xs bg-purple-100 text-purple-600">
+                    {{ service.category.name }}
+                </span>
+
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mt-4">
+
+                <div class="bg-gray-50 rounded-xl p-3 text-center">
+                    <p class="text-xs text-gray-500">Price</p>
+                    <p class="font-bold text-gray-800">
+                        ₹{{ service.price }}
+                    </p>
+                </div>
+
+                <div class="bg-gray-50 rounded-xl p-3 text-center">
+                    <p class="text-xs text-gray-500">Duration</p>
+                    <p class="font-bold text-gray-800">
+                        {{ service.duration }} min
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="mt-4 flex gap-2">
+
+                <a href="/services/{{ service.shop.slug }}/{{ service.id }}/edit/"
+                   class="flex-1 text-center py-2 rounded-xl bg-purple-600 text-white hover:bg-purple-700 transition">
+
+                    Edit
+                </a>
+
+                <a href="/services/{{ service.shop.slug }}/{{ service.id }}/delete/"
+                   class="flex-1 text-center py-2 rounded-xl bg-rose-500 text-white hover:bg-rose-600 transition">
+
+                    Delete
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}
