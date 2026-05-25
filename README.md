@@ -141,7 +141,7 @@ AppointHub is a comprehensive appointment scheduling and business management sol
 *Team overview with availability status and performance metrics*
 
 ### 👤 Customers
-![Customers](docs/screenshots/Customer.png)
+![Customers](docs/screenshots/Customer-page.png)
 *Customer database with segmentation and visit history*
 
 ### ⚙️ Settings
