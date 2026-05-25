@@ -129,11 +129,11 @@ AppointHub is a comprehensive appointment scheduling and business management sol
 *Interactive analytics section with revenue trends, popular services, recent customer activity, and booking insights.*
 
 ### 📅 Appointments
-![Appointments](docs/screenshots/Appointments-page.png)
+![Appointments](docs/screenshots/Appointment-page.png)
 *Manage and track all bookings with advanced filtering and search*
 
 ### 💼 Services
-![Services](docs/screenshots/Services-page.png)
+![Services](docs/screenshots/Service-page.png)
 *Service catalog with categories, pricing, and duration*
 
 ### 👥 Staff Management
@@ -141,7 +141,7 @@ AppointHub is a comprehensive appointment scheduling and business management sol
 *Team overview with availability status and performance metrics*
 
 ### 👤 Customers
-![Customers](docs/screenshots/Customers.png)
+![Customers](docs/screenshots/Customer.png)
 *Customer database with segmentation and visit history*
 
 ### ⚙️ Settings
@@ -195,7 +195,7 @@ AppointHub is a comprehensive appointment scheduling and business management sol
 
 ```bash
 # Clone the repository
-git clone https://github.com/Salvero/AppointHub.git
+git clone https://github.com/gayatripixel/Appointment-Booking-SaaS
 cd AppointHub
 
 # Create virtual environment
