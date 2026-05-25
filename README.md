@@ -12,7 +12,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
-[Live Demo](https://appointhub.onrender.com/) • [Features](https://github.com/Salvero/AppointHub?tab=readme-ov-file#-features) • [Screenshots](https://github.com/Salvero/AppointHub?tab=readme-ov-file#-screenshots)
+[Live Demo](https://appointhub.onrender.com/) • [Features](https://github.com/Salvero/AppointHub?tab=readme-ov-file#-features) • [Screenshots](https://github.com/gayatripixel/Appointment-Booking-SaaS/blob/main/README.md#-screenshots)
 
 </div>
 
