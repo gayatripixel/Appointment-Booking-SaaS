@@ -38,17 +38,11 @@
        {% endfor %}
       </select>
     </form>
+  </div>
 
-                     
-    {% for shop in shops %}
-      <a
-        href="/shops/{{ shop.slug }}/"
-        class="px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 transform {% if selected_shop and selected_shop.id == shop.id %} bg-gradient-to-r from-purple-600 to-rose-500 text-white scale-105 shadow-lg {% else %} bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105 {% endif %}"
-      >
-     {{ shop.name }}
-      </a>
-     {% endfor %}
-        </div>
+ 
+     
+        
 
                     <div
                       class="mt-4 md:mt-0 relative z-40"
@@ -586,7 +580,8 @@ document.addEventListener("DOMContentLoaded", function () {
     </a>
   </div>
 
-  <div class="overflow-x-auto">
+  <!-- <div class="overflow-x-auto"> -->
+    <div class="max-h-64 overflow-y-auto overflow-x-auto pr-2 custom-scrollbar">
     <table class="w-full text-sm">
       <thead>
         <tr class="text-left border-b border-gray-100">
@@ -632,6 +627,38 @@ document.addEventListener("DOMContentLoaded", function () {
           </td>
         </tr>
 
+        <tr class="hover:bg-gray-50 transition">
+          <td class="py-3 font-medium text-gray-800">Nirvi v</td>
+          <td class="py-3 text-gray-500">HairSpa</td>
+          <td class="py-3 font-semibold text-gray-800">₹850</td>
+          <td class="py-3">
+            <span class="px-3 py-1 rounded-full text-xs bg-yellow-100 text-yellow-600">
+              Pending
+            </span>
+          </td>
+        </tr>
+
+        <tr class="hover:bg-gray-50 transition">
+          <td class="py-3 font-medium text-gray-800">Yash </td>
+          <td class="py-3 text-gray-500">Massage</td>
+          <td class="py-3 font-semibold text-gray-800">₹2250</td>
+          <td class="py-3">
+            <span class="px-3 py-1 rounded-full text-xs bg-yellow-100 text-yellow-600">
+              Pending
+            </span>
+          </td>
+        </tr>
+        
+        <tr class="hover:bg-gray-50 transition">
+          <td class="py-3 font-medium text-gray-800">priya varma</td>
+          <td class="py-3 text-gray-500">Haircut</td>
+          <td class="py-3 font-semibold text-gray-800">₹850</td>
+          <td class="py-3">
+            <span class="px-3 py-1 rounded-full text-xs bg-green-100 text-green-600">
+              Completed
+            </span>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
