@@ -107,21 +107,26 @@ AppointHub is a comprehensive appointment scheduling and business management sol
 <div align="center">
 
 ### 🏠 Homepage
-![Homepage](docs/screenshots/Homepage-1.png)
-*Beautiful landing page with hero section, features, and pricing*
 
-![Homepage Details](docs/screenshots/Homepage-details.png)
-*Feature highlights and "How It Works" section*
+![Homepage Hero](docs/screenshots/Homepage-1.png)
+*Modern SaaS landing page for appointment booking with responsive hero section, CTA buttons, and service highlights.*
 
-![Homepage Dashboard Preview](docs/screenshots/Homepage-dashboard-2.png)
-*Interactive dashboard preview with animated charts*
+![Homepage Services](docs/screenshots/Homepage-2.png)
+*Showcases salon booking, clinic appointments, spa & wellness services, and simple 3-step booking workflow.*
+
+![Homepage Features](docs/screenshots/Homepage-3.png)
+*Displays powerful platform features including real-time availability, smart scheduling, secure booking, and multi-service support.*
+
+![Homepage Pricing](docs/screenshots/Homepage-4.png)
+*Flexible subscription plans with booking features, priority support, unlimited appointments, and premium experience options.*
 
 ### 📊 Dashboard
-![Dashboard](docs/screenshots/Dashboard-1.png)
-*Comprehensive overview with revenue charts, metrics, and quick actions*
 
-![Dashboard Bottom](docs/screenshots/Dashboard-2.png)
-*Weekly activity chart, today's schedule, and recent activity feed*
+![Dashboard](docs/screenshots/Dashboard-1.png)
+*Business management dashboard displaying appointments, bookings, customers, monthly revenue, and quick action shortcuts.*
+
+![Dashboard Analytics](docs/screenshots/Dashboard-2.png)
+*Interactive analytics section with revenue trends, popular services, recent customer activity, and booking insights.*
 
 ### 📅 Appointments
 ![Appointments](docs/screenshots/Appointments-page.png)
