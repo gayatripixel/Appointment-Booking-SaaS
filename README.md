@@ -10,8 +10,7 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=flat-square&logo=postgresql&logoColor=white)](https://postgresql.org)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker&logoColor=white)](https://docker.com)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.x-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
-[Screenshots](https://github.com/gayatripixel/Appointment-Booking-SaaS/blob/main/README.md#-screenshots)
-
+[📸 Screenshots](https://github.com/gayatripixel/Appointment-Booking-SaaS#-screenshots)
 </div>
 
 ---
