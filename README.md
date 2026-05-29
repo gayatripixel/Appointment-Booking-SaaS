@@ -126,7 +126,7 @@ AppointHub is a comprehensive appointment scheduling and business management sol
 *Interactive analytics section with revenue trends, popular services, recent customer activity, and booking insights.*
 
 ### 📅 Appointments
-![Appointments](docs/screenshots/Appointment-page.png)
+![Appointments](docs/screenshots/Appiontment-page.png)
 *Manage and track all bookings with advanced filtering and search*
 
 ### 💼 Services
