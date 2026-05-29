@@ -156,3 +156,10 @@ class StaffTimeOff(models.Model):
 
     def __str__(self):
         return f'{self.staff.display_name}: {self.start_date} - {self.end_date}'
+
+
+commission_percentage = models.DecimalField(
+    max_digits=5,
+    decimal_places=2,
+    default=20
+)

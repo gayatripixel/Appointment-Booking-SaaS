@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Notifications | AppointHub{% endblock %}
+
+{% block content %}
+
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">
+        Notifications
+    </h1>
+    <p class="text-gray-500 mt-1">
+        Stay updated with your latest activity
+    </p>
+</div>
+
+<div class="card overflow-hidden">
+
+    <div class="gradient-bg px-6 py-4">
+        <h2 class="text-xl font-semibold text-white">
+            All Notifications
+        </h2>
+    </div>
+
+    <div class="divide-y divide-gray-100">
+
+        {% for n in notifications %}
+
+        <div class="p-5 hover:bg-gray-50 transition">
+
+            <div class="flex items-start">
+
+                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
+
+                    <svg class="w-6 h-6 text-purple-600"
+                         fill="none"
+                         stroke="currentColor"
+                         viewBox="0 0 24 24">
+
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M15 17h5l-1.405-1.405A2.032
+                                 2.032 0 0118 14.158V11
+                                 a6.002 6.002 0 00-4-5.659V5
+                                 a2 2 0 10-4 0v.341
+                                 C7.67 6.165 6 8.388 6 11v3.159
+                                 c0 .538-.214 1.055-.595 1.436L4 17h5">
+                        </path>
+
+                    </svg>
+
+                </div>
+
+                <div class="ml-4 flex-1">
+
+                    <div class="flex justify-between items-start">
+
+                        <h3 class="font-semibold text-gray-900">
+                            {{ n.title }}
+                        </h3>
+
+                        <span class="text-xs text-purple-600">
+                            {{ n.created_at|timesince }} ago
+                        </span>
+
+                    </div>
+
+                    <p class="text-gray-600 mt-1">
+                        {{ n.message }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="text-center py-16">
+
+            <div class="w-16 h-16 mx-auto rounded-full bg-gray-100 flex items-center justify-center mb-4">
+
+                <svg class="w-8 h-8 text-gray-400"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M15 17h5l-1.405-1.405A2.032
+                             2.032 0 0118 14.158V11
+                             a6.002 6.002 0 00-4-5.659V5
+                             a2 2 0 10-4 0v.341
+                             C7.67 6.165 6 8.388 6 11v3.159
+                             c0 .538-.214 1.055-.595 1.436L4 17h5">
+                    </path>
+
+                </svg>
+
+            </div>
+
+            <h3 class="text-lg font-semibold text-gray-700">
+                No Notifications Yet
+            </h3>
+
+            <p class="text-gray-500 mt-2">
+                You're all caught up.
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

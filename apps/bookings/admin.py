@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Booking
+from .models import Booking, FollowUp
 
 
 @admin.register(Booking)
@@ -38,3 +38,24 @@ class BookingAdmin(admin.ModelAdmin):
     def customer_display_name(self, obj):
         return obj.customer_display_name
     customer_display_name.short_description = 'Customer'
+@admin.register(FollowUp)
+class FollowUpAdmin(admin.ModelAdmin):
+    list_display = [
+        'id',
+        'booking',
+        'followup_date',
+        'is_completed',
+        'created_at'
+    ]
+
+    list_filter = [
+        'is_completed',
+        'followup_date'
+    ]
+
+    search_fields = [
+        'booking__guest_name',
+        'booking__guest_email'
+    ]
+
+    ordering = ['followup_date']

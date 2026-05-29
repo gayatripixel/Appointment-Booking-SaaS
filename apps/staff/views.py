@@ -12,6 +12,8 @@ from .forms import (
     StaffWorkingHoursFormSet,
 )
 from .models import Staff, StaffTimeOff, StaffWorkingHours
+from django.db.models import Sum
+
 
 
 def get_shop_for_user(request, slug):

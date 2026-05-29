@@ -8,7 +8,7 @@ from django.db.models import Count
 
 from .forms import ServiceCategoryForm, ServiceForm
 from .models import Service, ServiceCategory
-
+from django.http import JsonResponse
 
 def get_shop_for_user(request, slug):
     """Get shop and verify ownership."""
@@ -93,6 +93,18 @@ def service_delete_view(request, slug, pk):
 
     return redirect('services:list', slug=shop.slug)
 
+@login_required
+def service_toggle_status(request, slug, pk):
+    shop = get_shop_for_user(request, slug)
+    service = get_object_or_404(Service, pk=pk, shop=shop)
+
+    service.is_active = not service.is_active
+    service.save()
+
+    return JsonResponse({
+        "success": True,
+        "is_active": service.is_active
+    })
 
 @login_required
 def category_create_view(request, slug):

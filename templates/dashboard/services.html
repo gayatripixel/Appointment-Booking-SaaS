@@ -217,36 +217,7 @@
 
 </div>
 
-<!-- Categories -->
 
-<div class="mt-8">
-
-    <h2 class="text-lg font-semibold text-gray-800 mb-4">
-        Categories
-    </h2>
-
-    <div class="flex flex-wrap gap-3">
-
-        <div class="flex flex-wrap gap-3 mt-4">
-
-           <button class="px-5 py-2.5 rounded-xl bg-purple-600 text-white text-sm font-medium shadow">
-             All Services
-           </button>
-
-           {% for category in categories %}
-
-          <button class="px-5 py-2.5 rounded-xl bg-white border border-gray-200 text-gray-700 text-sm font-medium hover:border-purple-500 hover:text-purple-600 transition">
-
-            {{ category }}
-
-          </button>
-
-      {% endfor %}
-    </div>
-
-  </div>
-
-</div>
 
 
 <div class="mt-6 mb-2 flex justify-center">
@@ -288,7 +259,7 @@
  
   <!-- Services Grid -->
 
-  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-8">
+  <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-3 gap-6 mt-8">
     {% for service in services %}
 
     <!-- <div class="bg-white rounded-2xl p-5 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border border-gray-100"> -->
@@ -369,11 +340,18 @@
         </div>
 
         <label class="inline-flex items-center cursor-pointer">
-          <input
+          <!-- <input
              type="checkbox"
              class="sr-only peer"
              {% if service.is_active %}checked{% endif %}
-           />
+           /> -->
+
+           <input
+              type="checkbox"
+              class="sr-only peer service-toggle"
+              data-url="{% url 'services:toggle_status' service.shop.slug service.id %}"
+              {% if service.is_active %}checked{% endif %}
+            />
 
           <div
             class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-purple-600 relative after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:h-5 after:w-5 after:rounded-full after:transition-all peer-checked:after:translate-x-5"
@@ -385,4 +363,30 @@
     {% endfor %}
   </div>
 </div>
+
+<script>
+document.querySelectorAll(".service-toggle").forEach(toggle => {
+
+    toggle.addEventListener("change", function () {
+
+        fetch(this.dataset.url, {
+            method: "GET",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+
+            if (data.success) {
+                location.reload();
+            }
+
+        });
+
+    });
+
+});
+</script>
+
 {% endblock %}

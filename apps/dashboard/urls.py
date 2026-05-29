@@ -54,4 +54,9 @@ urlpatterns = [
           views.service_add,
             name="service_add"
           ),
+
+     path('notifications/',
+          views.notifications_view,
+         name='notifications'
+     ),
 ]

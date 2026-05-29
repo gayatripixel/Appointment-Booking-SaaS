@@ -1,8 +1,10 @@
 import stripe
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 
 from apps.bookings.models import Booking
 from datetime import datetime, timedelta
+from apps.notifications.services import create_notification
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -17,6 +19,7 @@ from apps.shops.models import Shop
 from apps.staff.models import Staff
 from django.urls import reverse
 from django.http import JsonResponse
+from .models import FollowUp
 
 from .forms import (
     BookingCancelForm,
@@ -28,14 +31,7 @@ from .models import Booking
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
-
-# def create_booking(request, slug):
-#     return HttpResponse(f"Booking page for shop: {slug}")
-
-
-# def booking_start_view(request, slug):
-#     shop = get_object_or_404(Shop, slug=slug, is_active=True)
-   
+ 
 
 def booking_start_view(request, slug):
 
@@ -197,14 +193,13 @@ def booking_confirm_view(request, slug, service_pk):
     if request.method == 'POST':
 
 
-        user = (
-            request.user
-            if request.user.is_authenticated
-            else None
-        )
+           if request.user.is_authenticated:
+             user = request.user
+           else:
+              user = shop.owner
 
         # Auto assign staff
-        if not staff:
+           if not staff:
 
             available_staff = Staff.objects.filter(
                 shop=shop,
@@ -226,7 +221,7 @@ def booking_confirm_view(request, slug, service_pk):
 
             staff = available_staff
 
-        booking = Booking.objects.create(
+           booking = Booking.objects.create(
             shop=shop,
             customer=user,
             staff=staff,
@@ -235,10 +230,13 @@ def booking_confirm_view(request, slug, service_pk):
             start_time=booking_time,
             end_time=end_dt.time(),
 
+
             guest_name=request.POST.get(
                 'guest_name',
                 ''
             ),
+
+
 
             guest_email=request.POST.get(
                 'guest_email',
@@ -262,22 +260,29 @@ def booking_confirm_view(request, slug, service_pk):
             status=Booking.Status.CONFIRMED,
 
         )
+           
+           create_notification(
+               user=shop.owner,
+               title="New Appointment",
+               message=f"{booking.customer_display_name} booked {booking.service.name}",
+               notification_type="booking"
+            )
 
-        print("BOOKING CUSTOMER:", booking.customer)
+           print("BOOKING CUSTOMER:", booking.customer)
 
 
-        request.session['recent_booking_id'] = booking.pk
-
-        messages.success(
+           request.session['recent_booking_id'] = booking.pk
+  
+           messages.success(
             request,
             'Your booking has been confirmed!'
         )
 
-        return redirect(
+           return redirect(
             'bookings:success',
             slug=slug,
             pk=booking.pk
-        )
+          )
 
     return render(
         request,
@@ -294,6 +299,33 @@ def booking_confirm_view(request, slug, service_pk):
     )
 
 
+@csrf_exempt
+def stripe_webhook(request):
+    payload = request.body
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload,
+            request.META['HTTP_STRIPE_SIGNATURE'],
+            settings.STRIPE_WEBHOOK_SECRET
+        )
+    except:
+        return HttpResponse(status=400)
+
+    # 🔥 PAYMENT SUCCESS EVENT
+    if event["type"] == "checkout.session.completed":
+        session = event["data"]["object"]
+
+        booking_id = session.get("metadata", {}).get("booking_id")
+
+        if booking_id:
+            booking = Booking.objects.get(id=booking_id)
+            booking.payment_status = "paid"
+            booking.status = "completed"
+            booking.save()
+
+    return HttpResponse(status=200)
 @login_required
 def create_booking_checkout(request, slug, service_pk):
 
@@ -375,6 +407,10 @@ def booking_payment_success(request, slug):
         slug=slug
     )
 
+    print("PAYMENT SUCCESS PAGE HIT")
+
+
+
     service_id = request.GET.get('service')
     staff_id = request.GET.get('staff')
     date = request.GET.get('date')
@@ -441,8 +477,17 @@ def booking_payment_success(request, slug):
 
     )
 
-    print("BOOKING CREATED:", booking.id)
-    print("BOOKING CUSTOMER:", booking.customer)
+    print("CREATING PAYMENT NOTIFICATION")
+
+
+  
+    create_notification(
+       user=shop.owner,
+       title="Payment Received",
+       message=f"₹{booking.price} received from {booking.customer_display_name} for {booking.service.name}",
+       notification_type="booking"
+    )
+
 
     request.session['recent_booking_id'] = booking.pk
 
@@ -452,105 +497,7 @@ def booking_payment_success(request, slug):
         pk=booking.pk
     )
 
-# def booking_payment_success(request, slug):
 
-#     print("USER:", request.user)
-#     print("AUTH:", request.user.is_authenticated)
-
-#     # ✅ Stripe session verify
-
-#     session_id = request.GET.get('session_id')
-#     session = stripe.checkout.Session.retrieve(session_id)
-
-#     if not session_id:
-#        messages.error(request, "Payment session missing.")
-#        return redirect('landing')
-
-#     try:
-#        session = stripe.checkout.Session.retrieve(session_id)
-
-#        if session.payment_status != "paid":
-#         messages.error(request, "Payment not completed.")
-#         return redirect('landing')
-
-#     except Exception as e:
-#        messages.error(request, str(e))
-#        return redirect('landing')
-    
-#     # ✅ AFTER verification continue
-
-#     shop = get_object_or_404(
-#         Shop,
-#         slug=slug
-#     )
-
-#     service_id = request.GET.get('service')
-#     staff_id = request.GET.get('staff')
-#     date = request.GET.get('date')
-#     time = request.GET.get('time')
-
-#     service = get_object_or_404(
-#         Service,
-#         pk=service_id
-#     )
-
-#     staff = get_object_or_404(
-#         Staff,
-#         pk=staff_id
-#     )
-
-#     booking_date = datetime.strptime(
-#         date,
-#         '%Y-%m-%d'
-#     ).date()
-
-#     booking_time = datetime.strptime(
-#         time,
-#         '%H:%M'
-#     ).time()
-
-#     start_dt = datetime.combine(
-#         booking_date,
-#         booking_time
-#     )
-
-#     end_dt = start_dt + timedelta(
-#         minutes=service.duration
-#     )
-
-#     booking = Booking.objects.create(
-
-#         shop=shop,
-
-#         customer=request.user if request.user.is_authenticated else None,
-
-#         staff=staff,
-
-#         service=service,
-
-#         date=booking_date,
-
-#         start_time=booking_time,
-
-#         end_time=end_dt.time(),
-
-#         price=service.price,
-
-#         payment_status='paid',
-
-#         stripe_payment_intent=session.payment_intent,
-
-#         status=Booking.Status.CONFIRMED,
-
-#     )
-
-#     request.session['recent_booking_id'] = booking.pk
-
-#     return redirect(
-#         'bookings:success',
-#         slug=shop.slug,
-#         pk=booking.pk
-#     )
 
 
 def booking_payment_cancel(request, slug):
@@ -609,6 +556,18 @@ def get_shop_for_owner(request, slug):
     if shop.owner != request.user:
         raise Http404("Shop not found")
     return shop
+
+@login_required
+def payment_success(request, booking_id):
+    booking = Booking.objects.get(id=booking_id)
+
+    booking.payment_status = "paid"
+    booking.status = "completed"
+    booking.save()
+
+    return redirect("dashboard")
+
+
 
 
 @login_required
@@ -687,6 +646,9 @@ def booking_create_view(request, slug):
         'title': 'Create Booking',
     })
 
+@login_required
+def add_followup_view(request):
+    pass
 
 @login_required
 @require_POST
@@ -807,3 +769,37 @@ def slots_api_view(request, slug):
         'staff': staff,
         'selected_date': selected_date,
     })
+
+@login_required
+def add_followup_view(request):
+
+    bookings = Booking.objects.all()
+
+    if request.method == "POST":
+
+        booking_id = request.POST.get("booking")
+        followup_date = request.POST.get("followup_date")
+        followup_time = request.POST.get("followup_time")
+        notes = request.POST.get("notes")
+
+        booking = Booking.objects.get(id=booking_id)
+
+        FollowUp.objects.create(
+            booking=booking,
+            followup_date=followup_date,
+            followup_time=followup_time,
+            notes=notes
+        )
+
+        messages.success(request, "Follow Up Added Successfully")
+
+        return redirect("dashboard:index")
+
+    return render(
+        request,
+        "bookings/add_followup.html",
+        {
+            "bookings": bookings
+        }
+    )
+

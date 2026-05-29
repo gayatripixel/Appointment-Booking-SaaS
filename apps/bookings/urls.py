@@ -48,6 +48,8 @@ path(
     name='booking_payment_cancel'
 ),
 
+path('followup/add/', views.add_followup_view, name='add_followup'),
+
 
   
 ]

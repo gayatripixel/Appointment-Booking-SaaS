@@ -13,4 +13,5 @@ urlpatterns = [
     path('<slug:slug>/categories/create/', views.category_create_view, name='category_create'),
     path('<slug:slug>/categories/<int:pk>/edit/', views.category_edit_view, name='category_edit'),
     path('<slug:slug>/categories/<int:pk>/delete/', views.category_delete_view, name='category_delete'),
+    path('<slug:slug>/<int:pk>/toggle/',views.service_toggle_status,name='toggle_status'),
 ]

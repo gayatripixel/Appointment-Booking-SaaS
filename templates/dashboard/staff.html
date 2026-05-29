@@ -9,7 +9,7 @@
     class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6"
   >
     <div>
-      <h1 class="text-2xl font-bold text-blue-600 mb-1">Staff Members</h1>
+      <h1 class="text-2xl font-bold text-blue-600 mb-1">Team Members</h1>
       <p class="text-black/70">Manage your team and their schedules</p>
     </div>
    
@@ -74,113 +74,7 @@
 </div>
 
   <!-- Stats Cards -->
-  <!-- <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    <div class="glass-card rounded-xl p-4">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-gray-500">Total Staff</p>
-          <p class="text-2xl font-bold text-gray-800">
-            {{ stats.total_staff }}
-          </p>
-        </div>
-        <div
-          class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center"
-        >
-          <svg
-            class="w-5 h-5 text-purple-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-            ></path>
-          </svg>
-        </div>
-      </div>
-    </div>
-    <div class="glass-card rounded-xl p-4">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-gray-500">Available Now</p>
-          <p class="text-2xl font-bold text-green-600">
-            {{ stats.available_now }}
-          </p>
-        </div>
-        <div
-          class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center"
-        >
-          <svg
-            class="w-5 h-5 text-green-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M13 12a1 1 0 11-2 0 1 1 0 012 0z"
-            ></path>
-          </svg>
-        </div>
-      </div>
-    </div>
-    <div class="glass-card rounded-xl p-4">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-gray-500">Today's Appts</p>
-          <p class="text-2xl font-bold text-blue-600">
-            {{ stats.total_appointments_today }}
-          </p>
-        </div>
-        <div
-          class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center"
-        >
-          <svg
-            class="w-5 h-5 text-blue-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-            ></path>
-          </svg>
-        </div>
-      </div>
-    </div>
-    <div class="glass-card rounded-xl p-4">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-gray-500">Avg. Rating</p>
-          <p class="text-2xl font-bold text-yellow-600">
-            {{ stats.avg_rating }}
-          </p>
-        </div>
-        <div
-          class="w-10 h-10 rounded-lg bg-yellow-100 flex items-center justify-center"
-        >
-          <svg
-            class="w-5 h-5 text-yellow-600"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-            ></path>
-          </svg>
-        </div>
-      </div>
-    </div>
-  </div> -->
-<!-- Stats Cards -->
+
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
 
   <!-- Total Staff -->
@@ -193,7 +87,7 @@
       <div>
 
         <p class="text-purple-700 text-sm font-medium">
-          Total Staff
+          Total Members
         </p>
 
         <h2 class="text-3xl font-bold text-gray-800 mt-1">
@@ -417,7 +311,7 @@
             </svg>
             {{ member.user.email }}
           </div>
-          <div class="flex items-center text-sm text-gray-600">
+           <div class="flex items-center text-sm text-gray-600">
             <svg
               class="w-4 h-4 mr-2 text-gray-400"
               fill="none"
@@ -433,22 +327,7 @@
             </svg>
             {{ member.phone }}
           </div>
-          <div class="flex items-center text-sm text-gray-600">
-            <svg
-              class="w-4 h-4 mr-2 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
-            </svg>
-            {{ member.experience }} years experience
-          </div>
+          
         </div>
 
 <div class="mb-4">
@@ -477,38 +356,7 @@
   </div>
 </div>
 
-        <!-- Stats -->
-        <div class="grid grid-cols-3 gap-2 mb-4">
-          <div class="text-center p-2 bg-gray-50 rounded-lg">
-            <p class="text-xs text-gray-500">Today</p>
-            <p class="text-sm font-semibold text-gray-800">
-              0
-            </p>
-          </div>
-          <div class="text-center p-2 bg-gray-50 rounded-lg">
-            <p class="text-xs text-gray-500">This Week</p>
-            <p class="text-sm font-semibold text-gray-800">
-              0
-            </p>
-          </div>
-          <div class="text-center p-2 bg-gray-50 rounded-lg">
-            <p class="text-xs text-gray-500">Rating</p>
-            <p
-              class="text-sm font-semibold text-gray-800 flex items-center justify-center"
-            >
-              <svg
-                class="w-3.5 h-3.5 text-yellow-500 mr-0.5"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-                ></path>
-              </svg>
-              {{ member.rating }}
-            </p>
-          </div>
-        </div>
+
 
         <!-- Actions -->
         <div

@@ -1,7 +1,10 @@
 import stripe
+import json
 from django.conf import settings
 from apps.staff.models import Staff
 from django.db.models import Avg
+from django.db.models import Sum, Q
+from decimal import Decimal, ROUND_HALF_UP
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -14,6 +17,8 @@ from django.db.models import Count, Sum
 from django.utils import timezone
 
 from django.db import models
+from datetime import timedelta
+from django.db.models import Sum
 
 from apps.shops.models import Shop
 from apps.bookings.models import Booking
@@ -23,7 +28,7 @@ from django.db.models.functions import ExtractWeekDay
 
 from django.shortcuts import get_object_or_404, redirect
 from django.http import JsonResponse
-from apps.bookings.models import Booking
+from apps.bookings.models import Booking, FollowUp
 from apps.accounts.models import User
 from django.db.models import Sum
 from datetime import datetime
@@ -34,6 +39,35 @@ from django.db.models import Sum, Count
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
+from apps.notifications.models import Notification
+from apps.notifications.services import create_notification
+
+
+def notifications_view(request):
+    notifications = Notification.objects.filter(
+        user=request.user
+    ).order_by('-created_at')
+
+    return render(
+        request,
+        'dashboard/notifications.html',
+        {
+            'notifications': notifications
+        }
+    )
+
+def dashboard_index(request, slug):
+    shop = get_object_or_404(Shop, slug=slug)
+
+    notifications = Notification.objects.filter(
+        user=request.user,
+        is_read=False
+    ).order_by('-created_at')[:10]
+
+    return render(request, 'dashboard/index.html', {
+        'shop': shop,
+        'notifications': notifications
+    })
 
 def create_checkout_session(request, plan):
 
@@ -192,19 +226,159 @@ def index_view(request):
 
     # STATS
     if shop:
-        today_appointments = Booking.objects.filter(shop=shop, date=today.date()).count()
+
+        
+        today = timezone.now().date()
+
+
+        today_appointments = Booking.objects.filter(shop=shop, date=today).count()
+
+        yesterday_appointments = Booking.objects.filter(
+           shop=shop,
+           date=today - timedelta(days=1)
+        ).count()
+
+        if yesterday_appointments > 0:
+          today_change = ((today_appointments - yesterday_appointments) / yesterday_appointments) * 100
+        else:
+          today_change = 100 if today_appointments > 0 else 0
+
         total_bookings = Booking.objects.filter(shop=shop).count()
         total_revenue = Booking.objects.filter(shop=shop).aggregate(total=models.Sum('price'))['total'] or 0
+
+        today_followups = FollowUp.objects.filter(
+         booking__shop=shop,
+         followup_date=today,
+         is_completed=False
+        ).count()  
+
+        today_followups_list = FollowUp.objects.filter(
+         booking__shop=shop,
+         followup_date=today,
+         is_completed=False
+        ).select_related('booking', 'booking__customer', 'booking__service')
+
+        for followup in today_followups_list:
+
+            exists = Notification.objects.filter(
+                user=shop.owner,
+                title="Follow-up Today",
+                message__contains=str(followup.booking.id)
+            ).exists()
+
+            if not exists:
+                create_notification(
+                  user=shop.owner,
+                  title="Follow-up Today",
+                  message=f"Customer {followup.booking.customer_display_name} has follow-up today (Booking #{followup.booking.id})",
+                  notification_type="follow_up"
+            )
+
+        total_customers = Booking.objects.exclude(
+         customer=None
+        ).values('customer').distinct().count() 
+
+        today_revenue = Booking.objects.filter(
+         shop=shop,
+         date=today,
+         payment_status='paid'
+        ).aggregate(total=models.Sum('price'))['total'] or 0
+
+
+        # STAFF REVENUE + SALARY REPORT
+
+
+
+        staff_report = []
+
+        staff_members = Staff.objects.filter(shop=shop)
+
+        for staff in staff_members:
+
+         revenue = Booking.objects.filter(
+            staff=staff,
+            payment_status='paid'
+        ).aggregate(
+          total=Sum('price')
+        )['total'] or 0
+
+        bookings_count = Booking.objects.filter(
+          staff=staff
+        ).count()
+
+        print(
+         "STAFF:",
+          staff.user.get_full_name(),
+          "BOOKINGS:",
+           bookings_count,
+          "REVENUE:",
+           revenue,
+          "COMMISSION:",
+           getattr(staff, "commission_percentage", 0)
+        )
+
+
+
+        all_bookings = Booking.objects.filter(
+          staff=staff
+       )
+
+        for b in all_bookings:
+         print(
+          "BOOKING ID:", b.id,
+         "STATUS:", b.status,
+         "PAYMENT:", b.payment_status,
+          "PRICE:", b.price
+        )
+
+    # Example: 10% commission
+        #  commission = getattr(staff, 'commission_percentage', 10)
+
+        # salary = (revenue * commission) / 100
+       
+        commission = getattr(staff, 'commission_percentage', 10)
+
+        revenue = Decimal(str(revenue))
+        commission = Decimal(str(commission))
+
+        salary = (revenue * commission) / Decimal('100')
+        salary = salary.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+
+        staff_report.append({
+          'staff': staff,
+           'bookings': bookings_count,
+           'revenue': revenue,
+           'salary': salary,
+           'commission': commission,
+        })
+
+
     else:
         today_appointments = 0
         total_bookings = 0
         total_revenue = 0
+        today_revenue = 0
+        today_followups = 0
+        today_followups_list = []
+        total_customers = 0
+        staff_report = []
 
     stats = {
         'today_appointments': today_appointments,
         'upcoming_bookings': total_bookings,
+        'today_revenue': today_revenue,
         'monthly_revenue': total_revenue,
+        'today_followups': today_followups,
+        'followup_change': 15,
+        'total_customers': total_customers,
+        'today_change': round(today_change, 2),
+        
     }
+
+    print("TODAY DATE:", today)
+    print("YESTERDAY DATE:", today - timedelta(days=1))
+    print("TODAY COUNT:", today_appointments)
+    print("YESTERDAY COUNT:", yesterday_appointments)
 
     # CONTEXT
     context = {
@@ -222,6 +396,8 @@ def index_view(request):
         'stats': stats,
         'shops': shops,
         'selected_shop': shop,
+        'today_followups_list': today_followups_list,
+        'staff_report': staff_report,
     }
 
     return render(request, 'dashboard/index.html', context)
@@ -396,10 +572,13 @@ def appointments_view(request):
     ).count()
 
     revenue = bookings.filter(
-        payment_status='paid'
+    status='completed'
     ).aggregate(
-        total=Sum('price')
+    total=Sum('price')
     )['total'] or 0
+
+    print("BOOKINGS COUNT:", bookings.count())
+    print("BOOKINGS:", list(bookings.values('id', 'price', 'payment_status', 'status')))
 
     # =========================
     # PAGINATION
@@ -493,6 +672,7 @@ def services_view(request):
         context
     )
 
+
 @login_required
 def staff_view(request):
 
@@ -501,26 +681,15 @@ def staff_view(request):
     selected_shop_id = request.GET.get('shop', 'all')
 
     # =========================
-    # STAFF QUERY
+    # STAFF QUERY (FIRST FIX)
     # =========================
 
     if selected_shop_id == 'all':
-
         selected_shop = None
-
-        staff_members = Staff.objects.filter(
-            shop__owner=request.user
-        )
-
+        staff_members = Staff.objects.filter(shop__owner=request.user)
     else:
-
-        selected_shop = shops.filter(
-            id=selected_shop_id
-        ).first()
-
-        staff_members = Staff.objects.filter(
-            shop=selected_shop
-        )
+        selected_shop = shops.filter(id=selected_shop_id).first()
+        staff_members = Staff.objects.filter(shop=selected_shop)
 
     staff_members = staff_members.select_related(
         'user',
@@ -528,6 +697,34 @@ def staff_view(request):
     ).prefetch_related(
         'services'
     )
+
+    # =========================
+    # CALCULATIONS (MOVE THIS HERE)
+    # =========================
+
+    for staff in staff_members:
+
+        staff.total_bookings = Booking.objects.filter(
+            staff=staff
+        ).count()
+
+        staff.total_revenue = Booking.objects.filter(
+            staff=staff,
+            payment_status='paid'
+        ).aggregate(
+            total=Sum('price')
+        )['total'] or 0
+
+        staff.salary = (staff.total_revenue * Decimal('0.10')).quantize(
+         Decimal('0.01'),
+         rounding=ROUND_HALF_UP
+        )
+
+        print(
+            staff.user.get_full_name(),
+            staff.total_revenue,
+            getattr(staff, 'commission_percentage', 10)
+        )
 
     # =========================
     # STATS
@@ -541,9 +738,7 @@ def staff_view(request):
     ).count()
 
     avg_rating = (
-        staff_members.aggregate(
-            avg=Avg('rating')
-        )['avg'] or 0
+        staff_members.aggregate(avg=Avg('rating'))['avg'] or 0
     )
 
     total_appointments_today = Booking.objects.filter(
@@ -558,18 +753,12 @@ def staff_view(request):
         'avg_rating': round(avg_rating, 1),
     }
 
-    context = {
+    return render(request, 'dashboard/staff.html', {
         'staff_members': staff_members,
         'stats': stats,
         'shops': shops,
         'selected_shop_id': selected_shop_id,
-    }
-
-    return render(
-        request,
-        'dashboard/staff.html',
-        context
-    )
+    })
 
 @login_required
 def customers_view(request):
@@ -728,6 +917,7 @@ def customers_view(request):
         total=Sum("price")
     )["total"] or 0
 
+
     stats = {
         "total_customers": total_customers,
         "vip_customers": vip_customers,
@@ -833,3 +1023,49 @@ def service_delete(request, service_id):
 def service_add(request):
     return render(request, "dashboard/service_add.html")
  
+@login_required
+def reports_view(request):
+
+    shop = Shop.objects.filter(owner=request.user).first()
+
+    total_revenue = Booking.objects.filter(
+        shop=shop,
+        payment_status='paid'
+    ).aggregate(total=Sum('price'))['total'] or 0
+
+    total_bookings = Booking.objects.filter(
+        shop=shop
+    ).count()
+
+    total_customers = Booking.objects.filter(
+        shop=shop
+    ).values('customer').distinct().count()
+
+    total_services = Service.objects.filter(
+        shop=shop
+    ).count()
+
+    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+
+    revenue_data = [5000, 8000, 12000, 10000, 15000, float(total_revenue)]
+
+    bookings_data = [10, 18, 25, 20, 30, total_bookings]
+
+    context = {
+
+        'total_revenue': round(float(total_revenue), 2),
+        'total_bookings': total_bookings,
+        'total_customers': total_customers,
+        'total_services': total_services,
+
+        'months': json.dumps(months),
+        'revenue_data': json.dumps(revenue_data),
+        'bookings_data': json.dumps(bookings_data),
+    }
+
+    return render(
+        request,
+        'dashboard/reports.html',
+        context
+    )
+

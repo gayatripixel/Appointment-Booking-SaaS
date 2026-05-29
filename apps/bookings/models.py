@@ -155,3 +155,32 @@ class Booking(models.Model):
         if self.status in [self.Status.PENDING, self.Status.CONFIRMED]:
             self.status = self.Status.NO_SHOW
             self.save(update_fields=['status', 'updated_at'])
+
+class FollowUp(models.Model):
+    booking = models.ForeignKey(
+        'Booking',
+        on_delete=models.CASCADE,
+        related_name='followups'
+    )
+
+    followup_date = models.DateField()
+    followup_time = models.TimeField(null=True, blank=True)
+
+    notes = models.TextField(
+        blank=True
+    )
+
+    is_completed = models.BooleanField(
+        default=False
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    class Meta:
+        ordering = ['followup_date']
+
+    def __str__(self):
+        return f"Follow Up - {self.booking.customer_display_name} - {self.followup_date}"
+

@@ -1,12 +1,21 @@
 import logging
 
 import resend
+from .models import Notification
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.urls import reverse
 
 logger = logging.getLogger(__name__)
 
+
+def create_notification(user, title, message, notification_type="system"):
+    return Notification.objects.create(
+        user=user,
+        title=title,
+        message=message,
+        notification_type=notification_type,
+    )
 
 class EmailService:
     """Service for sending emails via Resend API."""
@@ -134,6 +143,7 @@ class EmailService:
             subject=f'Booking Cancelled - {booking.service.name}',
             html_content=html_content,
         )
+    
 
 
 # Singleton instance

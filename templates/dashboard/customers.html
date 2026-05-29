@@ -157,72 +157,52 @@
 </div>
 
     <!-- Filters -->
-    <form method="GET" class="glass-card rounded-xl p-4 mb-6">
-    <div class="glass-card rounded-xl p-4 mb-6">
-        <div class="flex flex-col sm:flex-row gap-4">
-            <div class="flex-1">
-<div class="relative flex-1">
-
-    <input
-        type="text"
-        name="search"
-        value="{{ search }}"
-        placeholder="Search customers..."
-        class="w-full pl-5 pr-32 py-3 rounded-2xl border border-purple-100 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
-    >
-
-    <input
-      type="hidden"
-      name="shop"
-      value="{{ selected_shop_id }}"
-    >
-
-    <button
-        type="submit"
-        class="absolute right-2 top-1/2 -translate-y-1/2 px-5 py-1.5 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-medium shadow hover:scale-105 transition"
-    >
-        Search
-    </button>
-
-</div>
-            </div>
-<div class="w-64">
-
-<select
-    name="shop"
-    onchange="this.form.submit()"
-    class="w-full px-4 py-3 rounded-2xl border border-purple-100 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
->
+   <form method="GET" class="glass-card rounded-xl p-4 mb-6">
     
-    <option value="all"
-        {% if selected_shop_id == "all" %}
-            selected
-        {% endif %}
-    >
-        All Shops
-    </option>
+    <div class="flex flex-col sm:flex-row gap-4 items-center">
 
-    {% for shop in shops %}
+        <!-- SEARCH -->
+        <div class="flex-1 relative">
+            <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                placeholder="Search customers..."
+                class="w-full pl-5 pr-32 py-3 rounded-2xl border border-purple-100 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
+            >
 
-        <option
-            value="{{ shop.id }}"
-            {% if selected_shop_id == shop.id|stringformat:"s" %}
-                selected
-            {% endif %}
-        >
-            {{ shop.name }}
-        </option>
-
-    {% endfor %}
-
-</select>
-</div>
-
+            <button
+                type="submit"
+                class="absolute right-2 top-1/2 -translate-y-1/2 px-5 py-1.5 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-medium shadow hover:scale-105 transition"
+            >
+                Search
+            </button>
         </div>
-   </form>
+
+        <!-- FILTER -->
+        <div class="w-64">
+            <select
+                name="shop"
+                onchange="this.form.submit()"
+                class="w-full px-4 py-3 rounded-2xl border border-purple-100 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
+            >
+                <option value="all">All Shops</option>
+
+                {% for shop in shops %}
+                    <option value="{{ shop.id }}"
+                        {% if selected_shop_id == shop.id|stringformat:"s" %}selected{% endif %}
+                    >
+                        {{ shop.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+    </div>
+</form>
 
     <!-- Customers Grid -->
-    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+    <div class="grid md:grid-cols-3 xl:grid-cols-3 gap-6">
         {% for customer in customers %}
         <div class="bg-white rounded-3xl border border-purple-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1" hover:shadow-lg transition-shadow">
             <div class="p-5">

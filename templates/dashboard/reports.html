@@ -15,79 +15,145 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-        <div class="bg-white rounded-2xl shadow p-5 border">
-            <h2 class="text-sm text-gray-500">Total Revenue</h2>
-            <p class="text-3xl font-bold mt-2 text-green-600">
-                ₹1,24,500
-            </p>
-        </div>
+<div class="bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-3xl shadow-xl p-5">
+    <h2 class="text-sm text-green-100">Total Revenue</h2>
+    <p class="text-3xl font-bold mt-2">
+        ₹{{ total_revenue|floatformat:2 }}
+    </p>
+</div>
 
-        <div class="bg-white rounded-2xl shadow p-5 border">
-            <h2 class="text-sm text-gray-500">Appointments</h2>
-            <p class="text-3xl font-bold mt-2 text-blue-600">
-                1,250
-            </p>
-        </div>
+<div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-3xl shadow-xl p-5">
+    <h2 class="text-sm text-blue-100">Appointments</h2>
+    <p class="text-3xl font-bold mt-2">
+        {{ total_bookings }}
+    </p>
+</div>
 
-        <div class="bg-white rounded-2xl shadow p-5 border">
-            <h2 class="text-sm text-gray-500">Customers</h2>
-            <p class="text-3xl font-bold mt-2 text-purple-600">
-                420
-            </p>
-        </div>
+<div class="bg-gradient-to-r from-purple-500 to-violet-600 text-white rounded-3xl shadow-xl p-5">
+    <h2 class="text-sm text-purple-100">Customers</h2>
+    <p class="text-3xl font-bold mt-2">
+        {{ total_customers }}
+    </p>
+</div>
 
-        <div class="bg-white rounded-2xl shadow p-5 border">
-            <h2 class="text-sm text-gray-500">Growth</h2>
-            <p class="text-3xl font-bold mt-2 text-pink-600">
-                +18%
-            </p>
-        </div>
+<div class="bg-gradient-to-r from-pink-500 to-rose-600 text-white rounded-3xl shadow-xl p-5">
+    <h2 class="text-sm text-pink-100">Services</h2>
+    <p class="text-3xl font-bold mt-2">
+        {{ total_services }}
+    </p>
+</div>
 
     </div>
 
-    <div class="bg-white mt-8 rounded-2xl shadow border p-6">
+  <div class="bg-white mt-8 rounded-2xl shadow border p-6">
+    <h2 class="text-xl font-semibold mb-4">
+        Revenue Trend
+    </h2>
+
+    <canvas id="revenueChart" height="120"></canvas>
+  </div>
+
+    <div class="mt-8 bg-white/90 backdrop-blur-md rounded-3xl shadow-xl border border-purple-100 p-6">    
         <h2 class="text-xl font-semibold mb-4">
-            Monthly Performance
-        </h2>
+        Booking Trend
+    </h2>
 
-        <div class="space-y-4">
-
-            <div>
-                <div class="flex justify-between mb-1">
-                    <span>January</span>
-                    <span>70%</span>
-                </div>
-
-                <div class="w-full bg-gray-200 rounded-full h-3">
-                    <div class="bg-blue-500 h-3 rounded-full w-[70%]"></div>
-                </div>
-            </div>
-
-            <div>
-                <div class="flex justify-between mb-1">
-                    <span>February</span>
-                    <span>85%</span>
-                </div>
-
-                <div class="w-full bg-gray-200 rounded-full h-3">
-                    <div class="bg-green-500 h-3 rounded-full w-[85%]"></div>
-                </div>
-            </div>
-
-            <div>
-                <div class="flex justify-between mb-1">
-                    <span>March</span>
-                    <span>60%</span>
-                </div>
-
-                <div class="w-full bg-gray-200 rounded-full h-3">
-                    <div class="bg-pink-500 h-3 rounded-full w-[60%]"></div>
-                </div>
-            </div>
-
-        </div>
-    </div>
+    <canvas id="bookingChart" height="120"></canvas>
+  </div>
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+    console.log('{{ months|safe }}');
+    console.log('{{ revenue_data|safe }}');
+    console.log('{{ bookings_data|safe }}');
+
+const months = JSON.parse('{{ months|safe }}');
+const revenueData = JSON.parse('{{ revenue_data|safe }}');
+const bookingsData = JSON.parse('{{ bookings_data|safe }}');
+
+new Chart(document.getElementById('revenueChart'), {
+    type: 'line',
+    data: {
+        labels: months,
+       datasets: [{
+         label: 'Revenue (₹)',
+         data: revenueData,
+         borderColor: '#8B5CF6',
+         backgroundColor: 'rgba(139,92,246,0.15)',
+         fill: true,
+         tension: 0.4,
+         borderWidth: 4,
+         pointRadius: 5,
+         pointHoverRadius: 8
+        }]
+    },
+
+options: {
+    responsive: true,
+
+    animation: {
+         tension: {
+        duration: 2500,
+        easing: 'linear',
+        from: 1,
+        to: 0.4
+        }
+    },
+
+    plugins: {
+        legend: {
+            position: 'top'
+        }
+    },
+
+    scales: {
+        y: {
+            beginAtZero: true
+        }
+    }
+}
+
+});
+
+new Chart(document.getElementById('bookingChart'), {
+    type: 'bar',
+    data: {
+        labels: months,
+        datasets: [{
+           label: 'Bookings',
+           data: bookingsData,
+            backgroundColor: [
+             '#8B5CF6',
+             '#A855F7',
+             '#C026D3',
+             '#D946EF',
+             '#EC4899',
+             '#F472B6'
+            ],
+         borderRadius: 12
+       }]
+    },
+
+      options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top'
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+</script>
+
 {% endblock %}
+

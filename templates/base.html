@@ -118,7 +118,7 @@
                             Services
                         </a>
                         <a href="{% url 'dashboard:staff' %}" class="px-3 py-2 rounded-lg text-sm font-medium {% if request.resolver_match.url_name == 'staff' %}bg-purple-50 text-purple-700{% else %}text-gray-600 hover:bg-gray-100 hover:text-purple-600{% endif %} transition-colors">
-                            Staff
+                            Professionals
                         </a>
                         <a href="{% url 'dashboard:customers' %}" class="px-3 py-2 rounded-lg text-sm font-medium {% if request.resolver_match.url_name == 'customers' %}bg-purple-50 text-purple-700{% else %}text-gray-600 hover:bg-gray-100 hover:text-purple-600{% endif %} transition-colors">
                             Customers
@@ -132,55 +132,105 @@
                     {% if user.is_authenticated %}
                         <!-- Notifications -->                     
                         <div class="relative" x-data="{ open: false }">
-                            <button @click="open = !open" class="p-2 text-gray-500 hover:text-purple-600 hover:bg-gray-100 rounded-lg transition-colors relative">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                                </svg>
-                                <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                            </button>
 
-                            <!-- Notifications Dropdown -->
-                            <div x-show="open" 
-                                 x-cloak
-                                 @click.away="open = false"
-                                 x-transition
-                                 class="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-200 z-50 overflow-hidden">
-                                <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
-                                    <div class="flex items-center justify-between">
-                                        <h3 class="text-sm font-semibold text-gray-900">Notifications</h3>
-                                        <span class="px-2 py-0.5 text-xs font-medium bg-purple-100 text-purple-700 rounded-full">4 new</span>
-                                    </div>
-                                </div>
-                                <div class="max-h-80 overflow-y-auto">
-                                    <a href="#" class="flex items-start px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100">
-                                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                            </svg>
-                                        </div>
-                                        <div class="ml-3 flex-1">
-                                            <p class="text-sm font-medium text-gray-900">New Booking Confirmed</p>
-                                            <p class="text-xs text-gray-500 mt-0.5">Gayatri booked a Haircut</p>
-                                            <p class="text-xs text-purple-600 mt-1">2 minutes ago</p>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="flex items-start px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100">
-                                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
-                                            <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                            </svg>
-                                        </div>
-                                        <div class="ml-3 flex-1">
-                                            <p class="text-sm font-medium text-gray-900">Appointment Reminder</p>
-                                            <p class="text-xs text-gray-500 mt-0.5">3 appointments scheduled for today</p>
-                                            <p class="text-xs text-purple-600 mt-1">1 hour ago</p>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="px-4 py-3 bg-gray-50 border-t border-gray-200">
-                                    <a href="#" class="text-sm text-purple-600 hover:text-purple-700 font-medium">View all notifications</a>
-                                </div>
-                            </div>
+<div class="relative inline-block" x-data="{ open: false }">
+
+
+<button @click="open = !open"
+        class="relative p-2 text-gray-600 hover:text-purple-600 hover:bg-gray-100 rounded-lg transition">
+
+    <!-- Bell Icon -->
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+    </svg>
+
+    <!-- Notification Count -->
+    {% if notifications|length > 0 %}
+    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] px-1.5 rounded-full min-w-[16px] text-center">
+        {{ notifications|length }}
+    </span>
+    {% endif %}
+
+</button>
+
+<div x-show="open"
+     x-cloak
+     @click.away="open = false"
+class="absolute right-0 mt-3 w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
+  
+<!-- Header -->
+<div class="px-5 py-4 border-b bg-white flex justify-between items-center">      <div>
+         <h3 class="font-semibold text-gray-900">Notifications</h3>
+         <p class="text-xs text-gray-500">Latest updates</p>
+      </div>
+<span class="text-xs font-medium bg-purple-100 text-purple-700 px-2.5 py-1 rounded-full">
+    {{ notifications|length }} total
+</span>
+    </div>
+
+
+
+    <!-- Notifications list -->
+    <div class="max-h-72 overflow-y-auto">
+
+
+        {% for n in notifications|slice:":3" %}
+<div class="flex items-start gap-3 px-4 py-4 border-b hover:bg-purple-50 transition">
+
+    <!-- Icon -->
+    <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+        <svg class="w-5 h-5 text-purple-600"
+             fill="none"
+             stroke="currentColor"
+             viewBox="0 0 24 24">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5" />
+        </svg>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1 min-w-0">
+
+        <p class="text-sm font-semibold text-gray-900">
+            {{ n.title }}
+        </p>
+
+        <p class="text-sm text-gray-600 mt-1">
+            {{ n.message }}
+        </p>
+
+        <p class="text-xs text-gray-400 mt-2">
+            {{ n.created_at|timesince }} ago
+        </p>
+
+    </div>
+
+</div>
+{% empty %}
+<div class="py-10 text-center">
+    <div class="text-4xl mb-2">🔔</div>
+    <p class="text-sm text-gray-500">
+        No notifications yet
+    </p>
+</div>
+{% endfor %}
+    </div>
+
+    <!-- Footer -->
+<div class="p-3 border-t bg-white text-center">
+            <a href="{% url 'dashboard:notifications' %}"
+           class="text-sm text-purple-600 hover:text-purple-700 font-medium">
+            View all notifications →
+        </a>
+    </div>
+
+</div>
+
+</div>
+                       
                         </div>
 
                         <!-- User Menu -->
@@ -272,8 +322,14 @@
         </div>
     </main>
 
+    <div class="border-b border-gray-800 pb-6 mb-8 text-center">
+      <p class="text-gray-400 text-sm">
+         Trusted by salons, clinics & freelancers across India
+      </p>
+    </div>
+
     <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-400 py-12 px-4">
+    <footer class="bg-gradient-to-b from-gray-900 to-black text-gray-400 py-12 px-4">
         <div class="max-w-7xl mx-auto">
             <div class="grid md:grid-cols-4 gap-8 mb-8">
                 <div>
@@ -285,35 +341,39 @@
                         </div>
                         <span class="text-xl font-bold text-white">AppointHub</span>
                     </div>
-                    <p class="text-sm">Smart appointment management for modern businesses.</p>
-                </div>
+                <p class="text-sm text-gray-400 leading-relaxed">
+                   A modern SaaS platform for managing appointments, staff, services and customers efficiently.
+                </p>               
+             </div>
                 <div>
                     <h4 class="text-white font-semibold mb-4">Product</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="{% url 'landing' %}#features" class="hover:text-white transition">Features</a></li>
-                        <li><a href="{% url 'landing' %}#pricing" class="hover:text-white transition">Pricing</a></li>
-                        <li><a href="#" class="hover:text-white transition">Integrations</a></li>
+                        <li><a href="{% url 'landing' %}#features" class="hover:text-purple-400 transition duration-200">Features</a></li>
+                        <li><a href="{% url 'landing' %}#pricing" class="hover:text-purple-400 transition duration-200">Pricing</a></li>
+                        <li><a href="#" cclass="hover:text-purple-400 transition duration-200">Integrations</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="text-white font-semibold mb-4">Company</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-white transition">About</a></li>
-                        <li><a href="#" class="hover:text-white transition">Blog</a></li>
-                        <li><a href="#" class="hover:text-white transition">Careers</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition duration-200">About</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition duration-200">Blog</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition duration-200">Careers</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-white font-semibold mb-4">Support</h4>
+                    <h4 class="text-white font-semibold mb-4 tracking-wide uppercase text-sm">Support</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-white transition">Help Center</a></li>
-                        <li><a href="#" class="hover:text-white transition">Contact</a></li>
-                        <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition duration-200">Help Center</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition duration-200">Contact</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition duration-200">Privacy Policy</a></li>
                     </ul>
                 </div>
             </div>
             <div class="border-t border-gray-800 pt-8 text-center text-sm">
-                <p>&copy; 2025 AppointHub. All rights reserved.</p>
+                <p class="text-gray-500">
+                  © 2026 AppointHub. Built with Django + Tailwind CSS • All rights reserved.
+                </p>
             </div>
         </div>
     </footer>
