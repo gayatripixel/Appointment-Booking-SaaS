@@ -14,6 +14,8 @@ urlpatterns = [
 
     path('setup/',views.shop_setup_view, name='shop_setup'),
 
+    path("add-shop/", views.add_shop_view, name="add_shop"),
+
     # 🔥 CUSTOMER SHOP LIST
     path('', views.shops_list_view, name='shops_list'),
 
@@ -28,9 +30,7 @@ urlpatterns = [
     path('<slug:slug>/closures/', views.shop_closures_view, name='closures'),
     path('<slug:slug>/closures/<int:pk>/delete/', views.shop_closure_delete_view, name='closure_delete'),
 
-    path('setup/', views.shop_setup_view, name='setup'),
-
-
+    
     path('', views.shops_list_view, name='list'),
 
 ]

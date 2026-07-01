@@ -312,3 +312,33 @@ def my_shop_redirect_view(request):
         return redirect('shops:dashboard', slug=shop.slug)
 
     return redirect('shops:shop_setup')
+
+@login_required
+def add_shop_view(request):
+
+    if request.method == "POST":
+        form = ShopForm(request.POST, request.FILES, user=request.user)
+
+        if form.is_valid():
+
+            shop = form.save()
+
+            for day in range(7):
+                BusinessHours.objects.create(
+                    shop=shop,
+                    day_of_week=day,
+                    open_time="09:00",
+                    close_time="17:00",
+                    is_closed=False,
+                )
+
+            messages.success(request, "Shop created successfully!")
+
+            return redirect("shops:dashboard", slug=shop.slug)
+
+    else:
+        form = ShopForm(user=request.user)
+
+    return render(request, "shops/add_shop.html", {
+        "form": form
+    })

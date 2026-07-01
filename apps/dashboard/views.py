@@ -298,16 +298,16 @@ def index_view(request):
          revenue = Booking.objects.filter(
             staff=staff,
             payment_status='paid'
-        ).aggregate(
+         ).aggregate(
           total=Sum('price')
-        )['total'] or 0
+         )['total'] or 0
 
-        bookings_count = Booking.objects.filter(
-          staff=staff
-        ).count()
+         bookings_count = Booking.objects.filter(
+           staff=staff
+         ).count()
 
-        print(
-         "STAFF:",
+         print(
+          "STAFF:",
           staff.user.get_full_name(),
           "BOOKINGS:",
            bookings_count,
@@ -315,46 +315,44 @@ def index_view(request):
            revenue,
           "COMMISSION:",
            getattr(staff, "commission_percentage", 0)
-        )
+         )
 
 
 
-        all_bookings = Booking.objects.filter(
+         all_bookings = Booking.objects.filter(
           staff=staff
-       )
+         )
 
-        for b in all_bookings:
-         print(
+         for b in all_bookings:
+          print(
           "BOOKING ID:", b.id,
          "STATUS:", b.status,
          "PAYMENT:", b.payment_status,
           "PRICE:", b.price
-        )
-
-    # Example: 10% commission
-        #  commission = getattr(staff, 'commission_percentage', 10)
-
-        # salary = (revenue * commission) / 100
+         )
        
-        commission = getattr(staff, 'commission_percentage', 10)
+         commission = getattr(staff, 'commission_percentage', 10)
 
-        revenue = Decimal(str(revenue))
-        commission = Decimal(str(commission))
+         revenue = Decimal(str(revenue))
+         commission = Decimal(str(commission))
 
-        salary = (revenue * commission) / Decimal('100')
-        salary = salary.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+         salary = (revenue * commission) / Decimal('100')
+         salary = salary.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
 
-        staff_report.append({
+         staff_report.append({
           'staff': staff,
            'bookings': bookings_count,
            'revenue': revenue,
            'salary': salary,
            'commission': commission,
-        })
+         })
 
 
     else:
         today_appointments = 0
+        yesterday_appointments = 0
+        today_change = 0
+
         total_bookings = 0
         total_revenue = 0
         today_revenue = 0

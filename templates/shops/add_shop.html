@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="max-w-4xl mx-auto mt-8 bg-white rounded-2xl shadow p-8">
+
+    <h2 class="text-3xl font-bold mb-2">
+        Add New Shop
+    </h2>
+
+    <p class="text-gray-500 mb-6">
+        Create another shop for your business.
+    </p>
+
+<form method="POST" enctype="multipart/form-data" class="space-y-6">
+    {% csrf_token %}
+
+    <!-- Business Information -->
+    <div>
+        <h3 class="text-xl font-semibold mb-4">Business Information</h3>
+
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-1">Business Name</label>
+                {{ form.name }}
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Description</label>
+                {{ form.description }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact -->
+    <div>
+        <h3 class="text-xl font-semibold mb-4">Contact Information</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Email</label>
+                {{ form.email }}
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Phone</label>
+                {{ form.phone }}
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium mb-1">Website</label>
+                {{ form.website }}
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Address -->
+    <div>
+        <h3 class="text-xl font-semibold mb-4">Address</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium mb-1">Street Address</label>
+                {{ form.address }}
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">City</label>
+                {{ form.city }}
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">State</label>
+                {{ form.state }}
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Postal Code</label>
+                {{ form.postal_code }}
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Country</label>
+                {{ form.country }}
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Branding -->
+    <div>
+        <h3 class="text-xl font-semibold mb-4">Branding</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Logo</label>
+                {{ form.logo }}
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Cover Image</label>
+                {{ form.cover_image }}
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Settings -->
+    <div>
+        <h3 class="text-xl font-semibold mb-4">Booking Settings</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Lead Time</label>
+                {{ form.booking_lead_time }}
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Advance Days</label>
+                {{ form.max_advance_booking_days }}
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Buffer Time</label>
+                {{ form.buffer_time }}
+            </div>
+
+        </div>
+    </div>
+
+    <button
+        type="submit"
+        class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl font-semibold">
+        Create Shop
+    </button>
+
+</form>
+
+</div>
+
+{% endblock %}
